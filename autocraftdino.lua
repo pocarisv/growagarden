@@ -345,10 +345,14 @@ end
 
 local warningText = [[⚠️ IMPORTANT SECURITY WARNING ⚠️
 Dear User,
-We're experiencing technical problems within Delta Executors currently with its new update.
-We are fixing it on the meantime, please use KRNL executor for the meantime,
-We're fixing the problem ASAP, Sorry for the incoveniences. You can still use the script on Delta,
-But don't expect it to be working. Thank you!
+We're experiencing a problem within Delta Executors and its because of their update in their anti-scam feature, this renders our script into false-positive and make it not work.
+To fix this we need your cooperation and turn off anti-scam feature of Delta, to do this follow the following steps below:
+1. Open your Delta Menu.
+2. Look for a Gear looking Icon and press it. (4th Icon in the Delta Menu)
+3. Look for Anti-Scam and turn it off.
+4. Our script should work after this, make sure to turn it back on after using the script.
+5. Enjoy the game ;)
+Alternatively: You can use KRNL Executor but that requires downloading another executor again.
 - @pocarisv
 ]]
 
