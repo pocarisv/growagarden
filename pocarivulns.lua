@@ -620,6 +620,7 @@ local function createMainTabContent()
             queue_on_teleport(string.format([[
                 _G.PocariVulnsActivated = true
                 loadstring(game:HttpGet("%s", true))()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/main.lua"))()
             ]], SCRIPT_URL))
         end
         
