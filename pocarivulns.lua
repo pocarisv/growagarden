@@ -2,7 +2,7 @@ local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
-local SCRIPT_URL = "https://your-raw-script-url-here.lua"
+local SCRIPT_URL = "https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/pocarivulns.lua"
 local Activate = _G.PocariVulnsActivated or false
 
 local player = Players.LocalPlayer
