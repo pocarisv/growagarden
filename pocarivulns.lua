@@ -980,22 +980,10 @@ local success, err = xpcall(function()
         petInfo.TextXAlignment = Enum.TextXAlignment.Left
         petInfo.Parent = content
         
-        local saveStatus = Instance.new("TextLabel")
-        saveStatus.Name = "SaveStatus"
-        saveStatus.Size = UDim2.new(0.9, 0, 0, 20)
-        saveStatus.Position = UDim2.new(0.05, 0, 0, 145)
-        saveStatus.BackgroundTransparency = 1
-        saveStatus.Text = "💾 Save Status: None"
-        saveStatus.TextColor3 = Color3.fromRGB(200, 200, 100)
-        saveStatus.TextSize = 12
-        saveStatus.Font = Enum.Font.Gotham
-        saveStatus.TextXAlignment = Enum.TextXAlignment.Left
-        saveStatus.Parent = content
-        
         local setAgeBtn = Instance.new("TextButton")
         setAgeBtn.Name = "SetAgeButton"
         setAgeBtn.Size = UDim2.new(0.9, 0, 0, 35)
-        setAgeBtn.Position = UDim2.new(0.05, 0, 0, 170)
+        setAgeBtn.Position = UDim2.new(0.05, 0, 0, 150)
         setAgeBtn.BackgroundColor3 = Color3.fromRGB(70, 130, 200)
         setAgeBtn.Text = "🚀 Set Pet Age"
         setAgeBtn.TextSize = 14
@@ -1029,7 +1017,6 @@ local success, err = xpcall(function()
         end)
         
         local customAgeEnabled = false
-        local lastSavedPet = "None"
         local targetAge = 50
         
         customAgeBtn.MouseButton1Click:Connect(function()
@@ -1048,138 +1035,6 @@ local success, err = xpcall(function()
                 targetAge = 50
             end
         end)
-        
-        local function showNotification(message, duration)
-            local notifGui = Instance.new("ScreenGui")
-            notifGui.Name = "NotificationGui"
-            notifGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
-            notifGui.Parent = playerGui
-            
-            local notifFrame = Instance.new("Frame")
-            notifFrame.Size = UDim2.new(0, 320, 0, 45)
-            notifFrame.Position = UDim2.new(0.5, -160, 0, -60)
-            notifFrame.BackgroundColor3 = Color3.fromRGB(30, 40, 60)
-            notifFrame.BorderSizePixel = 0
-            notifFrame.ZIndex = 999999
-            notifFrame.Parent = notifGui
-            
-            local corner = Instance.new("UICorner", notifFrame)
-            corner.CornerRadius = UDim.new(0, 8)
-            
-            local stroke = Instance.new("UIStroke", notifFrame)
-            stroke.Color = Color3.fromRGB(70, 130, 200)
-            stroke.Thickness = 1
-            
-            local notifLabel = Instance.new("TextLabel", notifFrame)
-            notifLabel.Size = UDim2.new(1, -10, 1, 0)
-            notifLabel.Position = UDim2.new(0, 5, 0, 0)
-            notifLabel.BackgroundTransparency = 1
-            notifLabel.Text = message
-            notifLabel.TextColor3 = Color3.new(1, 1, 1)
-            notifLabel.TextScaled = true
-            notifLabel.Font = Enum.Font.GothamBold
-            notifLabel.TextSize = 12
-            notifLabel.ZIndex = 999999
-            
-            TweenService:Create(notifFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back), {Position = UDim2.new(0.5, -160, 0, 20)}):Play()
-            
-            wait(duration or 3)
-            TweenService:Create(notifFrame, TweenInfo.new(0.3), {Position = UDim2.new(0.5, -160, 0, -60)}):Play()
-            wait(0.3)
-            notifGui:Destroy()
-        end
-        
-        local function savePetForRejoin(petName)
-            if petName then
-                local queueScript = string.format([[
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-
-local character = player.Character or player.CharacterAdded:Wait()
-
-local function findPetTool(targetName)
-    for _, child in pairs(character:GetChildren()) do
-        if child:IsA("Tool") and child.Name == "%s" then
-            return child
-        end
-    end
-    return nil
-end
-
-local function changePetAge()
-    local tool = findPetTool("%s")
-    if tool then
-        local newName = tool.Name:gsub("%%[Age%%s%%d+%%]", "[Age %d]")
-        tool.Name = newName
-        
-        local function showNotification(message, duration)
-            local notifGui = Instance.new("ScreenGui")
-            notifGui.Name = "AutoNotificationGui"
-            notifGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
-            notifGui.Parent = player:WaitForChild("PlayerGui")
-            
-            local notifFrame = Instance.new("Frame")
-            notifFrame.Size = UDim2.new(0, 320, 0, 45)
-            notifFrame.Position = UDim2.new(0.5, -160, 0, -60)
-            notifFrame.BackgroundColor3 = Color3.fromRGB(30, 40, 60)
-            notifFrame.BorderSizePixel = 0
-            notifFrame.ZIndex = 999999
-            notifFrame.Parent = notifGui
-            
-            local corner = Instance.new("UICorner", notifFrame)
-            corner.CornerRadius = UDim.new(0, 8)
-            
-            local stroke = Instance.new("UIStroke", notifFrame)
-            stroke.Color = Color3.fromRGB(70, 200, 70)
-            stroke.Thickness = 1
-            
-            local notifLabel = Instance.new("TextLabel", notifFrame)
-            notifLabel.Size = UDim2.new(1, -10, 1, 0)
-            notifLabel.Position = UDim2.new(0, 5, 0, 0)
-            notifLabel.BackgroundTransparency = 1
-            notifLabel.Text = message
-            notifLabel.TextColor3 = Color3.new(1, 1, 1)
-            notifLabel.TextScaled = true
-            notifLabel.Font = Enum.Font.GothamBold
-            notifLabel.TextSize = 12
-            notifLabel.ZIndex = 999999
-            
-            local TweenService = game:GetService("TweenService")
-            TweenService:Create(notifFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back), {Position = UDim2.new(0.5, -160, 0, 20)}):Play()
-            
-            wait(duration or 3)
-            TweenService:Create(notifFrame, TweenInfo.new(0.3), {Position = UDim2.new(0.5, -160, 0, -60)}):Play()
-            wait(0.3)
-            notifGui:Destroy()
-        end
-        
-        showNotification("✅ Auto-changed " .. tool.Name .. " age to %d!", 4)
-        return true
-    end
-    return false
-end
-
-wait(3)
-if not changePetAge() then
-    wait(2)
-    changePetAge()
-end
-]], petName, petName, targetAge)
-
-                TeleportService:SetTeleportGui(Instance.new("ScreenGui"))
-                
-                if syn and syn.queue_on_teleport then
-                    syn.queue_on_teleport(queueScript)
-                end
-                if queue_on_teleport then
-                    queue_on_teleport(queueScript)
-                end
-                
-                showNotification("💾 Saved " .. petName .. " for auto-change on rejoin!", 3)
-                return true
-            end
-            return false
-        end
         
         local function getEquippedPetTool()
             local character = player.Character or player.CharacterAdded:Wait()
@@ -1214,31 +1069,12 @@ end
                 tool.Name = newName
                 petInfo.Text = "Equipped Pet: " .. tool.Name
                 setAgeBtn.Text = "🚀 Set Pet Age"
-                
-                if savePetForRejoin(originalPetName) then
-                    lastSavedPet = originalPetName
-                    saveStatus.Text = "💾 Saved: " .. originalPetName
-                    saveStatus.TextColor3 = Color3.fromRGB(100, 255, 100)
-                    
-                    coroutine.wrap(function()
-                        wait(1)
-                        showNotification("Successfully Changed the " .. originalPetName .. " Data... Will Initiate a Server Restart to Fully Load Changes.", 2)
-                        wait(2.5)
-                        loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/main.lua"))()
-                    end)()
-                else
-                    saveStatus.Text = "💾 Save Failed!"
-                    saveStatus.TextColor3 = Color3.fromRGB(255, 100, 100)
-                end
-                
             else
                 setAgeBtn.Text = "❌ No Pet Equipped!"
                 wait(2)
                 setAgeBtn.Text = "🚀 Set Pet Age"
             end
         end)
-        
-        saveStatus.Text = "💾 Save Status: " .. lastSavedPet
         
         coroutine.wrap(function()
             while true do
