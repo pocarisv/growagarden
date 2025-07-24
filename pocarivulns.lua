@@ -3,11 +3,11 @@ local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local HttpService = game:GetService("HttpService")
 
-local SCRIPT_URL = "https://raw.githubusercontent.com/yourusername/growagarden/main/"
+local SCRIPT_URL = "https://raw.githubusercontent.com/pocarisv/growagarden/main/background/"
 local Activate = _G.PocariVulnsActivated or false
 local Tabs = {
-    ["Main"] = "main_tab.lua",
-    ["Egg Randomizer"] = "egg_randomizer.lua",
+    ["Main"] = "activate.lua",
+    ["Egg Randomizer"] = "eggrandomizer.lua",
     ["Button 3"] = "placeholder_tab.lua",
     ["Button 4"] = "placeholder_tab.lua",
     ["Button 5"] = "placeholder_tab.lua"
