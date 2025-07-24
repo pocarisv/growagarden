@@ -11,11 +11,26 @@ local function logError(err)
     warn(debug.traceback())
 end
 
+local teleportScript = [[
+    _G.PocariVulnsActivated = ]] .. tostring(_G.PocariVulnsActivated or false) .. [[
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/pocarivulns.lua"))()
+]]
+
+if queue_on_teleport then
+    queue_on_teleport(teleportScript)
+elseif syn and syn.queue_on_teleport then
+    syn.queue_on_teleport(teleportScript)
+end
+
 local success, err = xpcall(function()
     local Activate = _G.PocariVulnsActivated or false
 
     local player = Players.LocalPlayer
     local playerGui = player:WaitForChild("PlayerGui")
+    if playerGui:FindFirstChild("PocariVulns") then
+        print("GUI already exists, skipping initialization.")
+        return
+    end
     
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "PocariVulns"
@@ -649,18 +664,6 @@ local success, err = xpcall(function()
             
             if not success then
                 warn("Error loading script: " .. err)
-            end
-            
-            local teleportScript = [[
-                _G.PocariVulnsActivated = true
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/main.lua"))()
-            ]]
-            
-            if queue_on_teleport then
-                queue_on_teleport(teleportScript)
-            end
-            if syn and syn.queue_on_teleport then
-                syn.queue_on_teleport(teleportScript)
             end
             
             welcomeLabel.Text = "Activated! Please select a script from the sidebar."
