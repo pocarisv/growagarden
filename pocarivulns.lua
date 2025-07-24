@@ -1,11 +1,9 @@
--- pocarivulns.lua
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local Workspace = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
 
--- Error handling setup
 print("Script starting...")
 local function logError(err)
     print("ERROR: " .. err)
@@ -13,20 +11,17 @@ local function logError(err)
 end
 
 local success, err = xpcall(function()
-    -- Main variables
     local SCRIPT_URL = "https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/pocarivulns.lua"
     local Activate = _G.PocariVulnsActivated or false
 
     local player = Players.LocalPlayer
     local playerGui = player:WaitForChild("PlayerGui")
     
-    -- Create GUI container
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "PocariVulns"
     screenGui.ResetOnSpawn = false
     screenGui.Parent = playerGui
 
-    -- Create GUI elements
     local minimizeButton = Instance.new("TextButton")
     minimizeButton.Name = "MinimizeButton"
     minimizeButton.Size = UDim2.new(0, 120, 0, 30)
@@ -568,7 +563,6 @@ local success, err = xpcall(function()
     )
     spawnTween:Play()
 
-    -- Create Main tab content
     local function createMainTabContent()
         local mainContent = Instance.new("Frame")
         mainContent.Name = "MainContent"
@@ -647,7 +641,6 @@ local success, err = xpcall(function()
         return mainContent
     end
 
-    -- Create Egg Randomizer tab content
     local function createEggRandomizerContent()
         local content = Instance.new("Frame")
         content.Name = "EggRandomizerContent"
@@ -672,7 +665,7 @@ local success, err = xpcall(function()
         randomizeBtn.Name = "RandomizeButton"
         randomizeBtn.Size = UDim2.new(0.9, 0, 0, 35)
         randomizeBtn.Position = UDim2.new(0.05, 0, 0, 50)
-        randomizeBtn.BackgroundColor3 = Color3.fromRGB(255, 140, 0)
+        randomizeBtn.BackgroundColor3 = Color3.fromRGB(80, 120, 255)
         randomizeBtn.Text = "🎲 Randomize Pets"
         randomizeBtn.TextSize = 14
         randomizeBtn.Font = Enum.Font.GothamBold
@@ -683,8 +676,8 @@ local success, err = xpcall(function()
         toggleBtn.Name = "ToggleButton"
         toggleBtn.Size = UDim2.new(0.9, 0, 0, 35)
         toggleBtn.Position = UDim2.new(0.05, 0, 0, 95)
-        toggleBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-        toggleBtn.Text = "👁️ ESP: ON"
+        toggleBtn.BackgroundColor3 = Color3.fromRGB(40, 45, 70)
+        toggleBtn.Text = "👁️ ESP: OFF"
         toggleBtn.TextSize = 14
         toggleBtn.Font = Enum.Font.GothamBold
         toggleBtn.TextColor3 = Color3.new(1, 1, 1)
@@ -694,51 +687,48 @@ local success, err = xpcall(function()
         autoBtn.Name = "AutoButton"
         autoBtn.Size = UDim2.new(0.9, 0, 0, 35)
         autoBtn.Position = UDim2.new(0.05, 0, 0, 140)
-        autoBtn.BackgroundColor3 = Color3.fromRGB(80, 150, 60)
+        autoBtn.BackgroundColor3 = Color3.fromRGB(40, 45, 70)
         autoBtn.Text = "🔁 Auto Randomize: OFF"
         autoBtn.TextSize = 14
         autoBtn.Font = Enum.Font.GothamBold
         autoBtn.TextColor3 = Color3.new(1, 1, 1)
         autoBtn.Parent = content
         
-        -- Add corners and strokes to match style
         for _, btn in ipairs({randomizeBtn, toggleBtn, autoBtn}) do
             local corner = Instance.new("UICorner")
             corner.CornerRadius = UDim.new(0, 6)
             corner.Parent = btn
             
             local stroke = Instance.new("UIStroke")
-            stroke.Color = Color3.fromRGB(120, 160, 255)
+            stroke.Color = Color3.fromRGB(70, 80, 120)
             stroke.Thickness = 1
             stroke.Parent = btn
         end
         
-        -- Button hover effects
         randomizeBtn.MouseEnter:Connect(function()
-            TweenService:Create(randomizeBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(255, 160, 40)}):Play()
+            TweenService:Create(randomizeBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(100, 140, 255)}):Play()
         end)
         randomizeBtn.MouseLeave:Connect(function()
-            TweenService:Create(randomizeBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(255, 140, 0)}):Play()
+            TweenService:Create(randomizeBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(80, 120, 255)}):Play()
         end)
         
         toggleBtn.MouseEnter:Connect(function()
-            TweenService:Create(toggleBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(80, 80, 80)}):Play()
+            TweenService:Create(toggleBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(60, 65, 90)}):Play()
         end)
         toggleBtn.MouseLeave:Connect(function()
-            TweenService:Create(toggleBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(60, 60, 60)}):Play()
+            TweenService:Create(toggleBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(40, 45, 70)}):Play()
         end)
         
         autoBtn.MouseEnter:Connect(function()
-            TweenService:Create(autoBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(100, 180, 80)}):Play()
+            TweenService:Create(autoBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(60, 65, 90)}):Play()
         end)
         autoBtn.MouseLeave:Connect(function()
-            TweenService:Create(autoBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(80, 150, 60)}):Play()
+            TweenService:Create(autoBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(40, 45, 70)}):Play()
         end)
         
         return content
     end
 
-    -- Create placeholder content for other tabs
     local function createPlaceholderTabContent(name)
         local content = Instance.new("Frame")
         content.Name = name .. "Content"
@@ -763,14 +753,12 @@ local success, err = xpcall(function()
         return content
     end
 
-    -- Initialize tab contents
     tabContents["Main"] = createMainTabContent()
     tabContents["Egg Randomizer"] = createEggRandomizerContent()
     tabContents["Button 3"] = createPlaceholderTabContent("Button 3")
     tabContents["Button 4"] = createPlaceholderTabContent("Button 4")
     tabContents["Button 5"] = createPlaceholderTabContent("Button 5")
 
-    -- Set initial tab visibility
     tabContents["Main"].Visible = true
     for name, content in pairs(tabContents) do
         if name ~= "Main" then
@@ -778,7 +766,6 @@ local success, err = xpcall(function()
         end
     end
 
-    -- Tab switching functionality
     for name, tab in pairs(tabs) do
         tab.button.MouseButton1Click:Connect(function()
             if name == "Main" or Activate then
@@ -792,7 +779,6 @@ local success, err = xpcall(function()
         end)
     end
 
-    -- Egg Randomizer variables and functions
     local petTable = {
         ["Common Egg"] = { "Dog", "Bunny", "Golden Lab" },
         ["Uncommon Egg"] = { "Chicken", "Black Bunny", "Cat", "Deer" },
@@ -808,7 +794,7 @@ local success, err = xpcall(function()
         ["Dinosaur Egg"] = { "Raptor", "Triceratops", "Stegosaurus" },
         ["Primal Egg"] = { "Parasaurolophus", "Iguanodon", "Pachycephalosaurus" },
     }
-    local espEnabled = true
+    local espEnabled = false
     local truePetMap = {}
     local autoRunning = false
     local bestPets = {
@@ -817,7 +803,6 @@ local success, err = xpcall(function()
         ["Mimic Octopus"] = true
     }
 
-    -- Egg Randomizer functions
     local function glitchLabelEffect(label)
         coroutine.wrap(function()
             local original = label.TextColor3
@@ -953,7 +938,6 @@ local success, err = xpcall(function()
         button.Text = "🎲 Randomize Pets"
     end
 
-    -- Connect Egg Randomizer buttons
     local eggContent = tabContents["Egg Randomizer"]
     if eggContent then
         local randomizeBtn = eggContent:FindFirstChild("RandomizeButton")
@@ -973,6 +957,7 @@ local success, err = xpcall(function()
                 if Activate then
                     espEnabled = not espEnabled
                     toggleBtn.Text = espEnabled and "👁️ ESP: ON" or "👁️ ESP: OFF"
+                    toggleBtn.BackgroundColor3 = espEnabled and Color3.fromRGB(80, 150, 60) or Color3.fromRGB(40, 45, 70)
                     for _, egg in pairs(getPlayerGardenEggs(60)) do
                         if espEnabled then
                             applyEggESP(egg, truePetMap[egg])
@@ -989,6 +974,7 @@ local success, err = xpcall(function()
                 if Activate then
                     autoRunning = not autoRunning
                     autoBtn.Text = autoRunning and "🔁 Auto Randomize: ON" or "🔁 Auto Randomize: OFF"
+                    autoBtn.BackgroundColor3 = autoRunning and Color3.fromRGB(80, 150, 60) or Color3.fromRGB(40, 45, 70)
                     coroutine.wrap(function()
                         while autoRunning do
                             countdownAndRandomize(randomizeBtn)
@@ -996,6 +982,7 @@ local success, err = xpcall(function()
                                 if bestPets[petName] then
                                     autoRunning = false
                                     autoBtn.Text = "🔁 Auto Randomize: OFF"
+                                    autoBtn.BackgroundColor3 = Color3.fromRGB(40, 45, 70)
                                     return
                                 end
                             end
@@ -1007,16 +994,13 @@ local success, err = xpcall(function()
         end
     end
 
-    -- Initialize ESP for existing eggs after character loads
     local function initESP()
-        -- Wait for character to load
         local char = player.Character
         if not char then
             player.CharacterAdded:Wait()
             char = player.Character
         end
         
-        -- Wait for HumanoidRootPart
         local root = char:FindFirstChild("HumanoidRootPart")
         if not root then
             char.ChildAdded:Wait()
@@ -1028,7 +1012,6 @@ local success, err = xpcall(function()
             return
         end
         
-        -- Initialize ESP
         for _, egg in ipairs(getPlayerGardenEggs(60)) do
             if not truePetMap[egg] then
                 local pets = petTable[egg.Name]
@@ -1041,10 +1024,9 @@ local success, err = xpcall(function()
         print("ESP initialized for nearby eggs")
     end
 
-    -- Initialize ESP in a coroutine after a short delay
     coroutine.wrap(function()
-        wait(3)  -- Wait for everything to load
-        pcall(initESP)  -- Protected call to prevent errors
+        wait(3)
+        pcall(initESP)
     end)()
 
     print("GUI initialized successfully")
