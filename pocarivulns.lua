@@ -194,7 +194,7 @@ local success, err = xpcall(function()
     local tabs = {}
     local tabContents = {}
 
-    local function createTab(name, layoutOrder)
+    local function createTab(name, layoutOrder, enabledByDefault)
         local tab = Instance.new("Frame")
         tab.Name = name .. "Tab"
         tab.Size = UDim2.new(1, -6, 0, 32)
@@ -236,11 +236,18 @@ local success, err = xpcall(function()
             frame = tab,
             button = tabButton,
             label = nameLabel,
-            stroke = tabStroke
+            stroke = tabStroke,
+            enabled = enabledByDefault
         }
         
+        -- Set initial state for non-Main tabs
+        if name ~= "Main" and not enabledByDefault and not Activate then
+            nameLabel.TextColor3 = Color3.fromRGB(80, 85, 100)
+            tabStroke.Color = Color3.fromRGB(30, 35, 50)
+        end
+        
         tabButton.MouseEnter:Connect(function()
-            if name == "Main" or Activate then
+            if (name == "Main" or Activate or enabledByDefault) and tabs[name].enabled then
                 local tween = TweenService:Create(tab, TweenInfo.new(0.15, Enum.EasingStyle.Quad), {BackgroundColor3 = Color3.fromRGB(25, 30, 45)})
                 tween:Play()
                 local strokeTween = TweenService:Create(tabStroke, TweenInfo.new(0.15, Enum.EasingStyle.Quad), {Color = Color3.fromRGB(60, 70, 110)})
@@ -251,7 +258,7 @@ local success, err = xpcall(function()
         end)
         
         tabButton.MouseLeave:Connect(function()
-            if name == "Main" or Activate then
+            if (name == "Main" or Activate or enabledByDefault) and tabs[name].enabled then
                 local tween = TweenService:Create(tab, TweenInfo.new(0.15, Enum.EasingStyle.Quad), {BackgroundColor3 = Color3.fromRGB(18, 22, 35)})
                 tween:Play()
                 local strokeTween = TweenService:Create(tabStroke, TweenInfo.new(0.15, Enum.EasingStyle.Quad), {Color = Color3.fromRGB(40, 45, 70)})
@@ -264,11 +271,18 @@ local success, err = xpcall(function()
         return tab
     end
 
-    createTab("Main", 1)
-    createTab("Egg Randomizer", 2)
-    createTab("Mutation Finder", 3)
-    createTab("Age Loader", 4)
-    createTab("Button 5", 5)
+    -- Create tabs (Main is always enabled, others are disabled until activation)
+    createTab("Main", 1, true) -- Enabled by default
+    createTab("Egg Randomizer", 2, false)
+    createTab("Mutation Finder", 3, false)
+    createTab("Age Loader", 4, false)
+    createTab("Button 5", 5, false)
+    createTab("Coming Soon", 6, false) -- Always disabled
+
+    -- Set Coming Soon tab to always be disabled
+    tabs["Coming Soon"].enabled = false
+    tabs["Coming Soon"].label.TextColor3 = Color3.fromRGB(80, 85, 100)
+    tabs["Coming Soon"].stroke.Color = Color3.fromRGB(30, 35, 50)
 
     local contentArea = Instance.new("ScrollingFrame")
     contentArea.Name = "ContentArea"
@@ -626,10 +640,12 @@ local success, err = xpcall(function()
             Activate = true
             _G.PocariVulnsActivated = true
             
+            -- Enable all tabs except "Coming Soon"
             for name, tab in pairs(tabs) do
-                if name ~= "Main" then
-                    tab.button.Active = true
+                if name ~= "Main" and name ~= "Coming Soon" then
+                    tab.enabled = true
                     tab.label.TextColor3 = Color3.fromRGB(130, 140, 190)
+                    tab.stroke.Color = Color3.fromRGB(40, 45, 70)
                 end
             end
             
@@ -1126,7 +1142,7 @@ local success, err = xpcall(function()
 
     for name, tab in pairs(tabs) do
         tab.button.MouseButton1Click:Connect(function()
-            if name == "Main" or Activate then
+            if (name == "Main" or Activate or tab.enabled) and tab.enabled then
                 for _, content in pairs(tabContents) do
                     content.Visible = false
                 end
