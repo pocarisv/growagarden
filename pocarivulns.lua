@@ -265,7 +265,7 @@ local success, err = xpcall(function()
 
     createTab("Main", 1)
     createTab("Egg Randomizer", 2)
-    createTab("Button 3", 3)
+    createTab("Mutation Finder", 3)
     createTab("Button 4", 4)
     createTab("Button 5", 5)
 
@@ -729,6 +729,189 @@ local success, err = xpcall(function()
         return content
     end
 
+    local function createMutationFinderContent()
+        local content = Instance.new("Frame")
+        content.Name = "MutationFinderContent"
+        content.Size = UDim2.new(1, 0, 1, 0)
+        content.BackgroundTransparency = 1
+        content.Visible = false
+        content.Parent = contentArea
+        
+        local title = Instance.new("TextLabel")
+        title.Name = "Title"
+        title.Size = UDim2.new(1, 0, 0, 30)
+        title.Position = UDim2.new(0, 0, 0, 10)
+        title.BackgroundTransparency = 1
+        title.Text = "🔍 Pet Mutation Finder 🧬"
+        title.Font = Enum.Font.GothamBold
+        title.TextSize = 16
+        title.TextColor3 = Color3.fromRGB(180, 185, 230)
+        title.TextXAlignment = Enum.TextXAlignment.Center
+        title.Parent = content
+        
+        local rerollBtn = Instance.new("TextButton")
+        rerollBtn.Name = "RerollButton"
+        rerollBtn.Size = UDim2.new(0.9, 0, 0, 35)
+        rerollBtn.Position = UDim2.new(0.05, 0, 0, 50)
+        rerollBtn.BackgroundColor3 = Color3.fromRGB(80, 120, 255)
+        rerollBtn.Text = "🔃 Reroll Mutation"
+        rerollBtn.TextSize = 14
+        rerollBtn.Font = Enum.Font.GothamBold
+        rerollBtn.TextColor3 = Color3.new(1, 1, 1)
+        rerollBtn.Parent = content
+        
+        local toggleBtn = Instance.new("TextButton")
+        toggleBtn.Name = "ToggleButton"
+        toggleBtn.Size = UDim2.new(0.9, 0, 0, 35)
+        toggleBtn.Position = UDim2.new(0.05, 0, 0, 95)
+        toggleBtn.BackgroundColor3 = Color3.fromRGB(40, 45, 70)
+        toggleBtn.Text = "🔍 ESP: OFF"
+        toggleBtn.TextSize = 14
+        toggleBtn.Font = Enum.Font.GothamBold
+        toggleBtn.TextColor3 = Color3.new(1, 1, 1)
+        toggleBtn.Parent = content
+        
+        local credit = Instance.new("TextLabel")
+        credit.Name = "Credit"
+        credit.Size = UDim2.new(1, 0, 0, 20)
+        credit.Position = UDim2.new(0, 0, 1, -25)
+        credit.BackgroundTransparency = 1
+        credit.Text = "Made by Jaquman013"
+        credit.Font = Enum.Font.Gotham
+        credit.TextSize = 12
+        credit.TextColor3 = Color3.fromRGB(150, 155, 200)
+        credit.TextXAlignment = Enum.TextXAlignment.Center
+        credit.Parent = content
+        
+        for _, btn in ipairs({rerollBtn, toggleBtn}) do
+            local corner = Instance.new("UICorner")
+            corner.CornerRadius = UDim.new(0, 6)
+            corner.Parent = btn
+            
+            local stroke = Instance.new("UIStroke")
+            stroke.Color = Color3.fromRGB(70, 80, 120)
+            stroke.Thickness = 1
+            stroke.Parent = btn
+        end
+        
+        rerollBtn.MouseEnter:Connect(function()
+            TweenService:Create(rerollBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(100, 140, 255)}):Play()
+        end)
+        rerollBtn.MouseLeave:Connect(function()
+            TweenService:Create(rerollBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(80, 120, 255)}):Play()
+        end)
+        
+        toggleBtn.MouseEnter:Connect(function()
+            TweenService:Create(toggleBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(60, 65, 90)}):Play()
+        end)
+        toggleBtn.MouseLeave:Connect(function()
+            TweenService:Create(toggleBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(40, 45, 70)}):Play()
+        end)
+        
+        local mutations = {
+            "Shiny", "Inverted", "Frozen", "Windy", "Golden", "Mega", "Tiny",
+            "Tranquil", "IronSkin", "Radiant", "Rainbow", "Shocked", "Ascended"
+        }
+        local currentMutation = mutations[math.random(#mutations)]
+        local espVisible = false
+        local espGui, espLabel
+        local hue = 0
+        
+        local function findMachine()
+            for _, obj in pairs(Workspace:GetDescendants()) do
+                if obj:IsA("Model") and obj.Name:lower():find("mutation") then
+                    return obj
+                end
+            end
+            return nil
+        end
+        
+        local function setupESP()
+            local machine = findMachine()
+            if not machine then
+                warn("Pet Mutation Machine not found.")
+                return
+            end
+            
+            local basePart = machine:FindFirstChildWhichIsA("BasePart")
+            if not basePart then return end
+            
+            if espGui then espGui:Destroy() end
+            
+            espGui = Instance.new("BillboardGui")
+            espGui.Name = "MutationESP"
+            espGui.Adornee = basePart
+            espGui.Size = UDim2.new(0, 200, 0, 40)
+            espGui.StudsOffset = Vector3.new(0, 3, 0)
+            espGui.AlwaysOnTop = true
+            espGui.Enabled = espVisible
+            espGui.Parent = basePart
+            
+            espLabel = Instance.new("TextLabel")
+            espLabel.Size = UDim2.new(1, 0, 1, 0)
+            espLabel.BackgroundTransparency = 1
+            espLabel.Font = Enum.Font.GothamBold
+            espLabel.TextSize = 24
+            espLabel.TextStrokeTransparency = 0.3
+            espLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+            espLabel.Text = currentMutation
+            espLabel.Parent = espGui
+            
+            RunService.RenderStepped:Connect(function()
+                if espVisible then
+                    hue = (hue + 0.01) % 1
+                    espLabel.TextColor3 = Color3.fromHSV(hue, 1, 1)
+                end
+            end)
+        end
+        
+        local function animateMutationReroll()
+            rerollBtn.Text = "⏳ Rerolling..."
+            rerollBtn.Active = false
+            
+            local duration = 2
+            local interval = 0.1
+            for i = 1, math.floor(duration / interval) do
+                if espLabel then
+                    espLabel.Text = mutations[math.random(#mutations)]
+                end
+                wait(interval)
+            end
+            
+            currentMutation = mutations[math.random(#mutations)]
+            if espLabel then
+                espLabel.Text = currentMutation
+            end
+            
+            rerollBtn.Text = "🔃 Reroll Mutation"
+            rerollBtn.Active = true
+        end
+        
+        toggleBtn.MouseButton1Click:Connect(function()
+            espVisible = not espVisible
+            toggleBtn.Text = espVisible and "🔍 ESP: ON" or "🔍 ESP: OFF"
+            toggleBtn.BackgroundColor3 = espVisible and Color3.fromRGB(80, 150, 60) or Color3.fromRGB(40, 45, 70)
+            
+            if espVisible and not espGui then
+                setupESP()
+            elseif espGui then
+                espGui.Enabled = espVisible
+            end
+        end)
+        
+        rerollBtn.MouseButton1Click:Connect(function()
+            if espVisible then
+                animateMutationReroll()
+            else
+                currentMutation = mutations[math.random(#mutations)]
+            end
+        end)
+        
+        spawn(setupESP)
+        
+        return content
+    end
+
     local function createPlaceholderTabContent(name)
         local content = Instance.new("Frame")
         content.Name = name .. "Content"
@@ -755,7 +938,7 @@ local success, err = xpcall(function()
 
     tabContents["Main"] = createMainTabContent()
     tabContents["Egg Randomizer"] = createEggRandomizerContent()
-    tabContents["Button 3"] = createPlaceholderTabContent("Button 3")
+    tabContents["Mutation Finder"] = createMutationFinderContent()
     tabContents["Button 4"] = createPlaceholderTabContent("Button 4")
     tabContents["Button 5"] = createPlaceholderTabContent("Button 5")
 
@@ -885,7 +1068,7 @@ local success, err = xpcall(function()
             char = player.CharacterAdded:Wait()
         end
         
-        local root = char:WaitForChild("HumanoidRootPart", 5)
+        local root = char:FindFirstChild("HumanoidRootPart")
         if not root then 
             warn("HumanoidRootPart not found!")
             return eggs 
