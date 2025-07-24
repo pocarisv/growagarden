@@ -269,22 +269,27 @@ local success, err = xpcall(function()
     createTab("Button 4", 4)
     createTab("Button 5", 5)
 
-    local contentArea = Instance.new("Frame")
+    local contentArea = Instance.new("ScrollingFrame")
     contentArea.Name = "ContentArea"
     contentArea.Size = UDim2.new(1, -146, 1, 0)
     contentArea.Position = UDim2.new(0, 146, 0, 0)
-    contentArea.BackgroundColor3 = Color3.fromRGB(5, 8, 15)
-    contentArea.BorderSizePixel = 0
+    contentArea.BackgroundTransparency = 1
+    contentArea.ScrollBarThickness = 6
+    contentArea.ScrollBarImageColor3 = Color3.fromRGB(70, 80, 120)
+    contentArea.AutomaticCanvasSize = Enum.AutomaticSize.Y
     contentArea.Parent = contentContainer
 
-    local contentCorner = Instance.new("UICorner")
-    contentCorner.CornerRadius = UDim.new(0, 8)
-    contentCorner.Parent = contentArea
+    local contentInner = Instance.new("Frame")
+    contentInner.Name = "ContentInner"
+    contentInner.Size = UDim2.new(1, 0, 0, 0)
+    contentInner.AutomaticSize = Enum.AutomaticSize.Y
+    contentInner.BackgroundTransparency = 1
+    contentInner.Parent = contentArea
 
-    local contentStroke = Instance.new("UIStroke")
-    contentStroke.Color = Color3.fromRGB(35, 40, 65)
-    contentStroke.Thickness = 1
-    contentStroke.Parent = contentArea
+    local contentLayout = Instance.new("UIListLayout")
+    contentLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    contentLayout.Padding = UDim.new(0, 5)
+    contentLayout.Parent = contentInner
 
     local watermarkFrame = Instance.new("Frame")
     watermarkFrame.Name = "WatermarkFrame"
@@ -566,10 +571,11 @@ local success, err = xpcall(function()
     local function createMainTabContent()
         local mainContent = Instance.new("Frame")
         mainContent.Name = "MainContent"
-        mainContent.Size = UDim2.new(1, 0, 1, 0)
+        mainContent.Size = UDim2.new(1, 0, 0, 0)
+        mainContent.AutomaticSize = Enum.AutomaticSize.Y
         mainContent.BackgroundTransparency = 1
         mainContent.Visible = false
-        mainContent.Parent = contentArea
+        mainContent.Parent = contentInner
         
         local welcomeLabel = Instance.new("TextLabel")
         welcomeLabel.Name = "WelcomeLabel"
@@ -587,7 +593,7 @@ local success, err = xpcall(function()
         local activateButton = Instance.new("TextButton")
         activateButton.Name = "ActivateButton"
         activateButton.Size = UDim2.new(0, 120, 0, 35)
-        activateButton.Position = UDim2.new(0.5, -60, 0.5, -17.5)
+        activateButton.Position = UDim2.new(0.5, -60, 0, 100)
         activateButton.BackgroundColor3 = Color3.fromRGB(80, 120, 255)
         activateButton.BorderSizePixel = 0
         activateButton.Text = "Activate"
@@ -644,10 +650,11 @@ local success, err = xpcall(function()
     local function createEggRandomizerContent()
         local content = Instance.new("Frame")
         content.Name = "EggRandomizerContent"
-        content.Size = UDim2.new(1, 0, 1, 0)
+        content.Size = UDim2.new(1, 0, 0, 0)
+        content.AutomaticSize = Enum.AutomaticSize.Y
         content.BackgroundTransparency = 1
         content.Visible = false
-        content.Parent = contentArea
+        content.Parent = contentInner
         
         local title = Instance.new("TextLabel")
         title.Name = "Title"
@@ -732,10 +739,11 @@ local success, err = xpcall(function()
     local function createMutationFinderContent()
         local content = Instance.new("Frame")
         content.Name = "MutationFinderContent"
-        content.Size = UDim2.new(1, 0, 1, 0)
+        content.Size = UDim2.new(1, 0, 0, 0)
+        content.AutomaticSize = Enum.AutomaticSize.Y
         content.BackgroundTransparency = 1
         content.Visible = false
-        content.Parent = contentArea
+        content.Parent = contentInner
         
         local title = Instance.new("TextLabel")
         title.Name = "Title"
@@ -770,18 +778,6 @@ local success, err = xpcall(function()
         toggleBtn.Font = Enum.Font.GothamBold
         toggleBtn.TextColor3 = Color3.new(1, 1, 1)
         toggleBtn.Parent = content
-        
-        local credit = Instance.new("TextLabel")
-        credit.Name = "Credit"
-        credit.Size = UDim2.new(1, 0, 0, 20)
-        credit.Position = UDim2.new(0, 0, 1, -25)
-        credit.BackgroundTransparency = 1
-        credit.Text = "Made by Jaquman013"
-        credit.Font = Enum.Font.Gotham
-        credit.TextSize = 12
-        credit.TextColor3 = Color3.fromRGB(150, 155, 200)
-        credit.TextXAlignment = Enum.TextXAlignment.Center
-        credit.Parent = content
         
         for _, btn in ipairs({rerollBtn, toggleBtn}) do
             local corner = Instance.new("UICorner")
@@ -915,13 +911,14 @@ local success, err = xpcall(function()
     local function createPlaceholderTabContent(name)
         local content = Instance.new("Frame")
         content.Name = name .. "Content"
-        content.Size = UDim2.new(1, 0, 1, 0)
+        content.Size = UDim2.new(1, 0, 0, 0)
+        content.AutomaticSize = Enum.AutomaticSize.Y
         content.BackgroundTransparency = 1
         content.Visible = false
-        content.Parent = contentArea
+        content.Parent = contentInner
         
         local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(1, -40, 1, -40)
+        label.Size = UDim2.new(1, -40, 0, 200)
         label.Position = UDim2.new(0, 20, 0, 20)
         label.BackgroundTransparency = 1
         label.Text = "Content for " .. name .. " will appear here"
