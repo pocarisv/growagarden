@@ -12,7 +12,7 @@ local function logError(err)
 end
 
 local teleportScript = [[
-    _G.PocariVulnsActivated = ]] .. tostring(_G.PocariVulnsActivated or false) .. [[
+    _G.PocariVulnsActivated = true
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/pocarivulns.lua"))()
 ]]
 
