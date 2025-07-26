@@ -354,7 +354,7 @@ activateButton.MouseButton1Click:Connect(function()
     queue_on_teleport([[
         loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/visual.lua"))()
     ]])
-    task.wait(1)
+    task.wait(5)
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/main.lua"))()
     
     local tween = TweenService:Create(activateButton, TweenInfo.new(0.3), {
