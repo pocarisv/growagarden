@@ -248,7 +248,7 @@ tabInstances["Main"] = createTab("Main", 1, true)
 tabInstances["Egg Randomizer"] = createTab("Egg Randomizer", 2, false)
 tabInstances["Pet Mutation Randomizer"] = createTab("Pet Mutation Randomizer", 3, false)
 tabInstances["Pet Age Loader"] = createTab("Pet Age Loader", 4, false)
-tabInstances["Bring Back Dino"] = createTab("Bring Back Dino", 5, false)
+tabInstances["Update Early Access"] = createTab("Ea", 5, false)
 tabInstances["Coming Soon"] = createTab("Coming Soon", 6, false)
 
 local contentArea = Instance.new("Frame")
