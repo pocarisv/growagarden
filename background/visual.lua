@@ -260,7 +260,8 @@ createTab("Egg Randomizer", 2, true)
 createTab("Pet Mutation Randomizer", 3, true)
 createTab("Pet Age Loader", 4, true)
 createTab("Bring Back Dino", 5, true)
-createTab("Coming Soon", 6, false)
+createTab("Update Early Access", 6, true)
+createTab("Coming Soon", 7, false)
 
 local contentArea = Instance.new("Frame")
 contentArea.Name = "ContentArea"
@@ -279,20 +280,37 @@ contentStroke.Color = Color3.fromRGB(35, 40, 65)
 contentStroke.Thickness = 1
 contentStroke.Parent = contentArea
 
--- Tab Content Creation Functions
+local scrollFrame = Instance.new("ScrollingFrame")
+scrollFrame.Name = "ContentScroller"
+scrollFrame.Size = UDim2.new(1, -10, 1, -10)
+scrollFrame.Position = UDim2.new(0, 5, 0, 5)
+scrollFrame.BackgroundTransparency = 1
+scrollFrame.BorderSizePixel = 0
+scrollFrame.ScrollBarThickness = 4
+scrollFrame.ScrollBarImageColor3 = Color3.fromRGB(70, 80, 120)
+scrollFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+scrollFrame.Parent = contentArea
+
+local contentHolder = Instance.new("Frame")
+contentHolder.Name = "ContentHolder"
+contentHolder.Size = UDim2.new(1, 0, 0, 0)
+contentHolder.AutomaticSize = Enum.AutomaticSize.Y
+contentHolder.BackgroundTransparency = 1
+contentHolder.Parent = scrollFrame
+
 local function createMainContent()
     local mainContent = Instance.new("Frame")
     mainContent.Name = "MainContent"
-    mainContent.Size = UDim2.new(1, -20, 1, -20)
-    mainContent.Position = UDim2.new(0, 10, 0, 10)
+    mainContent.Size = UDim2.new(1, 0, 0, 0)
+    mainContent.AutomaticSize = Enum.AutomaticSize.Y
     mainContent.BackgroundTransparency = 1
     mainContent.Visible = true
-    mainContent.Parent = contentArea
+    mainContent.Parent = contentHolder
     
     local welcomeLabel = Instance.new("TextLabel")
     welcomeLabel.Name = "WelcomeLabel"
-    welcomeLabel.Size = UDim2.new(1, 0, 1, 0)
-    welcomeLabel.Position = UDim2.new(0, 0, 0, 0)
+    welcomeLabel.Size = UDim2.new(1, 0, 0, 0)
+    welcomeLabel.AutomaticSize = Enum.AutomaticSize.Y
     welcomeLabel.BackgroundTransparency = 1
     welcomeLabel.Text = "Welcome to PocariVulns!!\n\nThis is compilation of the Vulnerabilities active in Grow A Garden, this is purely for educational purposes only and not intended for harm and misuse.\n\nYour executor is now initialized and verified, you may now access the vulns at the side bar. Thank you!"
     welcomeLabel.TextColor3 = Color3.fromRGB(180, 185, 230)
@@ -309,11 +327,11 @@ end
 local function createEggRandomizerContent()
     local content = Instance.new("Frame")
     content.Name = "EggRandomizerContent"
-    content.Size = UDim2.new(1, -20, 1, -20)
-    content.Position = UDim2.new(0, 10, 0, 10)
+    content.Size = UDim2.new(1, 0, 0, 0)
+    content.AutomaticSize = Enum.AutomaticSize.Y
     content.BackgroundTransparency = 1
     content.Visible = false
-    content.Parent = contentArea
+    content.Parent = contentHolder
     
     local title = Instance.new("TextLabel")
     title.Name = "Title"
@@ -377,11 +395,11 @@ end
 local function createMutationRandomizerContent()
     local content = Instance.new("Frame")
     content.Name = "MutationRandomizerContent"
-    content.Size = UDim2.new(1, -20, 1, -20)
-    content.Position = UDim2.new(0, 10, 0, 10)
+    content.Size = UDim2.new(1, 0, 0, 0)
+    content.AutomaticSize = Enum.AutomaticSize.Y
     content.BackgroundTransparency = 1
     content.Visible = false
-    content.Parent = contentArea
+    content.Parent = contentHolder
     
     local title = Instance.new("TextLabel")
     title.Name = "Title"
@@ -434,11 +452,11 @@ end
 local function createAgeLoaderContent()
     local content = Instance.new("Frame")
     content.Name = "AgeLoaderContent"
-    content.Size = UDim2.new(1, -20, 1, -20)
-    content.Position = UDim2.new(0, 10, 0, 10)
+    content.Size = UDim2.new(1, 0, 0, 0)
+    content.AutomaticSize = Enum.AutomaticSize.Y
     content.BackgroundTransparency = 1
     content.Visible = false
-    content.Parent = contentArea
+    content.Parent = contentHolder
     
     local title = Instance.new("TextLabel")
     title.Name = "Title"
@@ -524,11 +542,11 @@ end
 local function createDinoContent()
     local content = Instance.new("Frame")
     content.Name = "DinoContent"
-    content.Size = UDim2.new(1, -20, 1, -20)
-    content.Position = UDim2.new(0, 10, 0, 10)
+    content.Size = UDim2.new(1, 0, 0, 0)
+    content.AutomaticSize = Enum.AutomaticSize.Y
     content.BackgroundTransparency = 1
     content.Visible = false
-    content.Parent = contentArea
+    content.Parent = contentHolder
     
     local title = Instance.new("TextLabel")
     title.Name = "Title"
@@ -578,14 +596,71 @@ local function createDinoContent()
     return content
 end
 
+local function createEarlyAccessContent()
+    local content = Instance.new("Frame")
+    content.Name = "EarlyAccessContent"
+    content.Size = UDim2.new(1, 0, 0, 0)
+    content.AutomaticSize = Enum.AutomaticSize.Y
+    content.BackgroundTransparency = 1
+    content.Visible = false
+    content.Parent = contentHolder
+    
+    local title = Instance.new("TextLabel")
+    title.Name = "Title"
+    title.Size = UDim2.new(1, 0, 0, 30)
+    title.Position = UDim2.new(0, 0, 0, 10)
+    title.BackgroundTransparency = 1
+    title.Text = "🚀 Update Early Access"
+    title.Font = Enum.Font.GothamBold
+    title.TextSize = 16
+    title.TextColor3 = Color3.fromRGB(180, 185, 230)
+    title.TextXAlignment = Enum.TextXAlignment.Center
+    title.Parent = content
+    
+    local infoLabel = Instance.new("TextLabel")
+    infoLabel.Name = "InfoLabel"
+    infoLabel.Size = UDim2.new(0.9, 0, 0, 60)
+    infoLabel.Position = UDim2.new(0.05, 0, 0, 50)
+    infoLabel.BackgroundTransparency = 1
+    infoLabel.Text = "Get early access to upcoming features and updates before anyone else!"
+    infoLabel.TextColor3 = Color3.fromRGB(150, 170, 200)
+    infoLabel.TextSize = 12
+    infoLabel.Font = Enum.Font.Gotham
+    infoLabel.TextWrapped = true
+    infoLabel.TextXAlignment = Enum.TextXAlignment.Center
+    infoLabel.Parent = content
+    
+    local accessBtn = Instance.new("TextButton")
+    accessBtn.Name = "AccessButton"
+    accessBtn.Size = UDim2.new(0.9, 0, 0, 35)
+    accessBtn.Position = UDim2.new(0.05, 0, 0, 120)
+    accessBtn.BackgroundColor3 = Color3.fromRGB(80, 120, 255)
+    accessBtn.Text = "🔓 Get Early Access"
+    accessBtn.TextSize = 14
+    accessBtn.Font = Enum.Font.GothamBold
+    accessBtn.TextColor3 = Color3.new(1, 1, 1)
+    accessBtn.Parent = content
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = accessBtn
+    
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = Color3.fromRGB(70, 80, 120)
+    stroke.Thickness = 1
+    stroke.Parent = accessBtn
+    
+    return content
+end
+
 local function createComingSoonContent()
     local content = Instance.new("Frame")
     content.Name = "ComingSoonContent"
-    content.Size = UDim2.new(1, -20, 1, -20)
-    content.Position = UDim2.new(0, 10, 0, 10)
+    content.Size = UDim2.new(1, 0, 0, 0)
+    content.AutomaticSize = Enum.AutomaticSize.Y
     content.BackgroundTransparency = 1
     content.Visible = false
-    content.Parent = contentArea
+    content.Parent = contentHolder
     
     local title = Instance.new("TextLabel")
     title.Name = "Title"
@@ -615,12 +690,12 @@ local function createComingSoonContent()
     return content
 end
 
--- Create tab contents
 tabContents["Main"] = createMainContent()
 tabContents["Egg Randomizer"] = createEggRandomizerContent()
 tabContents["Pet Mutation Randomizer"] = createMutationRandomizerContent()
 tabContents["Pet Age Loader"] = createAgeLoaderContent()
 tabContents["Bring Back Dino"] = createDinoContent()
+tabContents["Update Early Access"] = createEarlyAccessContent()
 tabContents["Coming Soon"] = createComingSoonContent()
 
 local watermarkFrame = Instance.new("Frame")
@@ -898,7 +973,6 @@ local spawnTween = TweenService:Create(
 )
 spawnTween:Play()
 
--- Tab switching functionality
 for name, button in pairs(tabButtons) do
     if name ~= "Coming Soon" then
         button.MouseButton1Click:Connect(function()
@@ -909,7 +983,6 @@ for name, button in pairs(tabButtons) do
     end
 end
 
--- Egg Randomizer functionality
 local petTable = {
     ["Common Egg"] = { "Dog", "Bunny", "Golden Lab" },
     ["Uncommon Egg"] = { "Chicken", "Black Bunny", "Cat", "Deer" },
@@ -1149,7 +1222,6 @@ local function initESP()
     print("ESP initialized for nearby eggs")
 end
 
--- Mutation Randomizer functionality
 local mutations = {
     "Shiny", "Inverted", "Frozen", "Windy", "Golden", "Mega", "Tiny",
     "Tranquil", "IronSkin", "Radiant", "Rainbow", "Shocked", "Ascended"
@@ -1267,7 +1339,6 @@ end
 
 spawn(setupESP)
 
--- Age Loader functionality
 local ageContent = tabContents["Pet Age Loader"]
 if ageContent then
     local customAgeBtn = ageContent:FindFirstChild("CustomAgeButton")
@@ -1351,7 +1422,6 @@ if ageContent then
     end)()
 end
 
--- Initialize ESP
 coroutine.wrap(function()
     wait(3)
     pcall(initESP)
