@@ -594,7 +594,7 @@ local function createDinoContent()
     stroke.Parent = bringBackBtn
 
     bringBackBtn.MouseButton1Click:Connect(function()
-            game:GetService("ReplicatedStorage").Modules.UpdateService["DinoEvent"].Parent = workspace
+            game:GetService("ReplicatedStorage").Modules.UpdateService.DinoEvent.Parent = workspace
     end)
     
     return content
