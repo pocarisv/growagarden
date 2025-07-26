@@ -259,9 +259,8 @@ createTab("Main", 1, true)
 createTab("Egg Randomizer", 2, true)
 createTab("Pet Mutation Randomizer", 3, true)
 createTab("Pet Age Loader", 4, true)
-createTab("Bring Back Dino", 5, true)
-createTab("Update Early Access", 6, true)
-createTab("Coming Soon", 7, false)
+createTab("Update Early Access", 5, true)
+createTab("Coming Soon", 6, false)
 
 local contentArea = Instance.new("Frame")
 contentArea.Name = "ContentArea"
