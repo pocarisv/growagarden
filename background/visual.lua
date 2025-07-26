@@ -539,67 +539,6 @@ local function createAgeLoaderContent()
     return content
 end
 
-local function createDinoContent()
-    local content = Instance.new("Frame")
-    content.Name = "DinoContent"
-    content.Size = UDim2.new(1, 0, 0, 0)
-    content.AutomaticSize = Enum.AutomaticSize.Y
-    content.BackgroundTransparency = 1
-    content.Visible = false
-    content.Parent = contentHolder
-    
-    local title = Instance.new("TextLabel")
-    title.Name = "Title"
-    title.Size = UDim2.new(1, 0, 0, 30)
-    title.Position = UDim2.new(0, 0, 0, 10)
-    title.BackgroundTransparency = 1
-    title.Text = "🦖 Bring Back Dino"
-    title.Font = Enum.Font.GothamBold
-    title.TextSize = 16
-    title.TextColor3 = Color3.fromRGB(180, 185, 230)
-    title.TextXAlignment = Enum.TextXAlignment.Center
-    title.Parent = content
-    
-    local infoLabel = Instance.new("TextLabel")
-    infoLabel.Name = "InfoLabel"
-    infoLabel.Size = UDim2.new(0.9, 0, 0, 60)
-    infoLabel.Position = UDim2.new(0.05, 0, 0, 50)
-    infoLabel.BackgroundTransparency = 1
-    infoLabel.Text = "This feature will bring back the dinosaur pet from previous events."
-    infoLabel.TextColor3 = Color3.fromRGB(150, 170, 200)
-    infoLabel.TextSize = 12
-    infoLabel.Font = Enum.Font.Gotham
-    infoLabel.TextWrapped = true
-    infoLabel.TextXAlignment = Enum.TextXAlignment.Center
-    infoLabel.Parent = content
-    
-    local bringBackBtn = Instance.new("TextButton")
-    bringBackBtn.Name = "BringBackButton"
-    bringBackBtn.Size = UDim2.new(0.9, 0, 0, 35)
-    bringBackBtn.Position = UDim2.new(0.05, 0, 0, 120)
-    bringBackBtn.BackgroundColor3 = Color3.fromRGB(80, 120, 255)
-    bringBackBtn.Text = "🦖 Bring Back Dino"
-    bringBackBtn.TextSize = 14
-    bringBackBtn.Font = Enum.Font.GothamBold
-    bringBackBtn.TextColor3 = Color3.new(1, 1, 1)
-    bringBackBtn.Parent = content
-    
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 6)
-    corner.Parent = bringBackBtn
-    
-    local stroke = Instance.new("UIStroke")
-    stroke.Color = Color3.fromRGB(70, 80, 120)
-    stroke.Thickness = 1
-    stroke.Parent = bringBackBtn
-
-    bringBackBtn.MouseButton1Click:Connect(function()
-            game:GetService("ReplicatedStorage").Modules.UpdateService.DinoEvent.Parent = workspace
-    end)
-    
-    return content
-end
-
 local function createEarlyAccessContent()
     local content = Instance.new("Frame")
     content.Name = "EarlyAccessContent"
@@ -702,7 +641,6 @@ tabContents["Main"] = createMainContent()
 tabContents["Egg Randomizer"] = createEggRandomizerContent()
 tabContents["Pet Mutation Randomizer"] = createMutationRandomizerContent()
 tabContents["Pet Age Loader"] = createAgeLoaderContent()
-tabContents["Bring Back Dino"] = createDinoContent()
 tabContents["Update Early Access"] = createEarlyAccessContent()
 tabContents["Coming Soon"] = createComingSoonContent()
 
