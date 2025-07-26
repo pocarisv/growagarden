@@ -245,7 +245,7 @@ end
 
 local tabInstances = {}
 tabInstances["Main"] = createTab("Main", 1, true)
-tabInstances["Egg Randomizer"] = createTab("Egg Finder", 2, false)
+tabInstances["Egg Finder"] = createTab("Egg Finder", 2, false)
 tabInstances["Pet Mutation Finder"] = createTab("Pet Mutation Finder", 3, false)
 tabInstances["Pet Age Loader"] = createTab("Pet Age Loader", 4, false)
 tabInstances["Update Early Access"] = createTab("Update Early Access", 5, false)
