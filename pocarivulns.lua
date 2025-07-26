@@ -321,7 +321,7 @@ end)
 activateButton.MouseButton1Click:Connect(function()
     activateButton.Text = "Activating..."
     activateButton.Active = false
-    loadstring(game:HttpGet("YOUR_SCRIPT_URL"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/main.lua"))()
     queue_on_teleport([[
         loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/visual.lua"))()
     ]])
