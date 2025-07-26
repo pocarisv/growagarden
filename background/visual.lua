@@ -256,8 +256,8 @@ local function createTab(name, layoutOrder, enabled)
 end
 
 createTab("Main", 1, true)
-createTab("Egg Randomizer", 2, true)
-createTab("Pet Mutation Randomizer", 3, true)
+createTab("Egg Finder", 2, true)
+createTab("Pet Mutation Finder", 3, true)
 createTab("Pet Age Loader", 4, true)
 createTab("Update Early Access", 5, true)
 createTab("Coming Soon", 6, false)
@@ -323,9 +323,9 @@ local function createMainContent()
     return mainContent
 end
 
-local function createEggRandomizerContent()
+local function createEggFinderContent()
     local content = Instance.new("Frame")
-    content.Name = "EggRandomizerContent"
+    content.Name = "EggFinderContent"
     content.Size = UDim2.new(1, 0, 0, 0)
     content.AutomaticSize = Enum.AutomaticSize.Y
     content.BackgroundTransparency = 1
@@ -337,7 +337,7 @@ local function createEggRandomizerContent()
     title.Size = UDim2.new(1, 0, 0, 30)
     title.Position = UDim2.new(0, 0, 0, 10)
     title.BackgroundTransparency = 1
-    title.Text = "🐾 Egg Randomizer ✨"
+    title.Text = "🐾 Egg Finder ✨"
     title.Font = Enum.Font.GothamBold
     title.TextSize = 16
     title.TextColor3 = Color3.fromRGB(180, 185, 230)
@@ -391,9 +391,9 @@ local function createEggRandomizerContent()
     return content
 end
 
-local function createMutationRandomizerContent()
+local function createMutationFinderContent()
     local content = Instance.new("Frame")
-    content.Name = "MutationRandomizerContent"
+    content.Name = "MutationFinderContent"
     content.Size = UDim2.new(1, 0, 0, 0)
     content.AutomaticSize = Enum.AutomaticSize.Y
     content.BackgroundTransparency = 1
@@ -405,7 +405,7 @@ local function createMutationRandomizerContent()
     title.Size = UDim2.new(1, 0, 0, 30)
     title.Position = UDim2.new(0, 0, 0, 10)
     title.BackgroundTransparency = 1
-    title.Text = "🔍 Pet Mutation Randomizer 🧬"
+    title.Text = "🔍 Pet Mutation Finder 🧬"
     title.Font = Enum.Font.GothamBold
     title.TextSize = 16
     title.TextColor3 = Color3.fromRGB(180, 185, 230)
@@ -637,8 +637,8 @@ local function createComingSoonContent()
 end
 
 tabContents["Main"] = createMainContent()
-tabContents["Egg Randomizer"] = createEggRandomizerContent()
-tabContents["Pet Mutation Randomizer"] = createMutationRandomizerContent()
+tabContents["Egg Finder"] = createEggFinderContent()
+tabContents["Pet Mutation Finder"] = createMutationFinderContent()
 tabContents["Pet Age Loader"] = createAgeLoaderContent()
 tabContents["Update Early Access"] = createEarlyAccessContent()
 tabContents["Coming Soon"] = createComingSoonContent()
@@ -1088,7 +1088,7 @@ local function countdownAndRandomize(button)
     button.Text = "🎲 Randomize Pets"
 end
 
-local eggContent = tabContents["Egg Randomizer"]
+local eggContent = tabContents["Egg Finder"]
 if eggContent then
     local randomizeBtn = eggContent:FindFirstChild("RandomizeButton")
     local toggleBtn = eggContent:FindFirstChild("ToggleButton")
@@ -1226,7 +1226,7 @@ local function setupESP()
 end
 
 local function animateMutationReroll()
-    local mutationContent = tabContents["Pet Mutation Randomizer"]
+    local mutationContent = tabContents["Pet Mutation Finder"]
     if mutationContent then
         local rerollBtn = mutationContent:FindFirstChild("RerollButton")
         if rerollBtn then
@@ -1253,7 +1253,7 @@ local function animateMutationReroll()
     end
 end
 
-local mutationContent = tabContents["Pet Mutation Randomizer"]
+local mutationContent = tabContents["Pet Mutation Finder"]
 if mutationContent then
     local rerollBtn = mutationContent:FindFirstChild("RerollButton")
     local toggleBtn = mutationContent:FindFirstChild("ToggleButton")
