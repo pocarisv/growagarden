@@ -320,11 +320,10 @@ end)
 
 activateButton.MouseButton1Click:Connect(function()
     activateButton.Text = "Activating..."
-    activateButton.Active = false
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/main.lua"))()
     queue_on_teleport([[
         loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/visual.lua"))()
     ]])
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/main.lua"))()
     
     local tween = TweenService:Create(activateButton, TweenInfo.new(0.3), {
         BackgroundColor3 = Color3.fromRGB(50, 150, 50),
