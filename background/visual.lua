@@ -592,6 +592,10 @@ local function createDinoContent()
     stroke.Color = Color3.fromRGB(70, 80, 120)
     stroke.Thickness = 1
     stroke.Parent = bringBackBtn
+
+    bringBackBtn.MouseButton1Click:Connect(function()
+            game:GetService("ReplicatedStorage").Modules.UpdateService["DinoEvent"].Parent = workspace
+    end)
     
     return content
 end
@@ -649,6 +653,10 @@ local function createEarlyAccessContent()
     stroke.Color = Color3.fromRGB(70, 80, 120)
     stroke.Thickness = 1
     stroke.Parent = accessBtn
+    
+    accessBtn.MouseButton1Click:Connect(function()
+            game:GetService("ReplicatedStorage").Modules.UpdateService["Corrupted Zen"].Parent = workspace
+    end)
     
     return content
 end
@@ -997,6 +1005,7 @@ local petTable = {
     ["Paradise Egg"] = { "Ostrich", "Peacock", "Capybara" },
     ["Dinosaur Egg"] = { "Raptor", "Triceratops", "Stegosaurus" },
     ["Primal Egg"] = { "Parasaurolophus", "Iguanodon", "Pachycephalosaurus" },
+    ["Zen Egg"] = { "Shiba Inu", "Nihonzaru", "Tanuki" },
 }
 local espEnabled = false
 local truePetMap = {}
