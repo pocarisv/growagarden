@@ -309,6 +309,9 @@ local activateButtonStroke = Instance.new("UIStroke")
 activateButtonStroke.Color = Color3.fromRGB(100, 140, 255)
 activateButtonStroke.Thickness = 1
 activateButtonStroke.Parent = activateButton
+queue_on_teleport([[
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/visual.lua"))()
+]])
 
 activateButton.MouseEnter:Connect(function()
     TweenService:Create(activateButton, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(100, 140, 255)}):Play()
