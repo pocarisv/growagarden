@@ -259,7 +259,7 @@ createTab("Main", 1, true)
 createTab("Egg Finder", 2, true)
 createTab("Pet Mutation Finder", 3, true)
 createTab("Pet Age Loader", 4, true)
-createTab("Seed Pack/Egg/Kitsune Chest Loader", 5, true)
+createTab("Infinite Loader", 5, true)
 createTab("Update Early Access", 6, true)
 createTab("Coming Soon", 7, false)
 
@@ -553,7 +553,7 @@ local function createInfiniteLoaderContent()
     title.Size = UDim2.new(1, -10, 0, 40)
     title.Position = UDim2.new(0, 5, 0, 10)
     title.BackgroundTransparency = 1
-    title.Text = "∞ Seed Pack/Egg/Kitsune Chest Loader"
+    title.Text = "∞ Infinite Loader"
     title.Font = Enum.Font.GothamBold
     title.TextSize = 14
     title.TextColor3 = Color3.fromRGB(180, 185, 230)
@@ -714,7 +714,7 @@ local function createInfiniteLoaderContent()
     local function startInfiniteLoad()
         local tool = getEquippedTool()
         if not tool or not extractQuantityInfo(tool.Name) then
-            statusLabel.Text = "❌ No valid tool equipped!"
+            statusLabel.Text = "❌ No valid seed pack/chest/egg equipped!"
             infiniteBtn.Text = "🔃 ACTIVATE LOADER"
             infiniteBtn.BackgroundColor3 = Color3.fromRGB(80, 120, 255)
             infiniteModeActive = false
@@ -791,13 +791,12 @@ local function createInfiniteLoaderContent()
     local function trackQuantityChanges()
         while true do
             wait(1)
-            if infiniteModeActive then
-                for tool, storedQty in pairs(currentQuantities) do
-                    if tool and tool.Parent then
-                        local qtyInfo = extractQuantityInfo(tool.Name)
-                        if qtyInfo and qtyInfo.quantity < storedQty then
-                            currentQuantities[tool] = qtyInfo.quantity
-                        end
+            for tool, storedQty in pairs(currentQuantities) do
+                if tool and tool.Parent then
+                    local qtyInfo = extractQuantityInfo(tool.Name)
+                    if qtyInfo and qtyInfo.quantity ~= storedQty then
+                        applyVisualQuantity(tool, qtyInfo.quantity)
+                        currentQuantities[tool] = qtyInfo.quantity
                     end
                 end
             end
@@ -911,7 +910,7 @@ tabContents["Main"] = createMainContent()
 tabContents["Egg Finder"] = createEggFinderContent()
 tabContents["Pet Mutation Finder"] = createMutationFinderContent()
 tabContents["Pet Age Loader"] = createAgeLoaderContent()
-tabContents["Seed Pack/Egg/Kitsune Chest Loader"] = createInfiniteLoaderContent()
+tabContents["Infinite Loader"] = createInfiniteLoaderContent()
 tabContents["Update Early Access"] = createEarlyAccessContent()
 tabContents["Coming Soon"] = createComingSoonContent()
 
