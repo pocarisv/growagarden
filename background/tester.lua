@@ -628,26 +628,21 @@ local function createInfiniteLoaderContent()
     btnStroke.Parent = infiniteBtn
     
     local infiniteModeActive = false
+    local lastTool = nil
     local loadCoroutine = nil
     local TARGET_QUANTITY = 9999
     local toolStates = {}
-    local toolTrackerConnection = nil
     
     local function getEquippedTool()
-        if not player.Character then
-            player.CharacterAdded:Wait()
-            wait(0.5)
-        end
+        local character = player.Character
+        if not character then return nil end
         
-        if not player.Character:FindFirstChild("HumanoidRootPart") then
-            player.Character:WaitForChild("HumanoidRootPart", 2)
-        end
-        
-        for _, tool in ipairs(player.Character:GetChildren()) do
+        for _, tool in ipairs(character:GetChildren()) do
             if tool:IsA("Tool") then
                 return tool
             end
         end
+        
         return nil
     end
     
@@ -658,7 +653,7 @@ local function createInfiniteLoaderContent()
         
         if #seedPackMatch == 4 then
             local prefix, openTag, quantity, closeTag = unpack(seedPackMatch)
-            return tonumber(quantity), {
+            return {
                 type = "seed",
                 prefix = prefix,
                 openTag = openTag,
@@ -667,7 +662,7 @@ local function createInfiniteLoaderContent()
             }
         elseif #eggMatch == 3 then
             local prefix, xSeparator, quantity = unpack(eggMatch)
-            return tonumber(quantity), {
+            return {
                 type = "egg",
                 prefix = prefix,
                 xSeparator = xSeparator,
@@ -675,7 +670,7 @@ local function createInfiniteLoaderContent()
             }
         elseif #kitsuneMatch == 4 then
             local prefix, openTag, quantity, closeTag = unpack(kitsuneMatch)
-            return tonumber(quantity), {
+            return {
                 type = "kitsune",
                 prefix = prefix,
                 openTag = openTag,
@@ -683,12 +678,10 @@ local function createInfiniteLoaderContent()
                 closeTag = closeTag
             }
         end
-        return nil, nil
+        return nil
     end
     
     local function createVisualName(quantityInfo, quantity)
-        if not quantityInfo then return "Unknown" end
-        
         if quantityInfo.type == "seed" then
             return quantityInfo.prefix .. quantityInfo.openTag .. quantity .. quantityInfo.closeTag
         elseif quantityInfo.type == "egg" then
@@ -716,33 +709,28 @@ local function createInfiniteLoaderContent()
     end
     
     local function updateProgress(percent)
-        local progress = math.clamp(percent, 0, 100)
-        local targetWidth = progressBg.AbsoluteSize.X * (progress / 100)
-        
+        local targetWidth = progressBg.AbsoluteSize.X * (percent / 100)
         local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
         local tween = TweenService:Create(progressFill, tweenInfo, {Size = UDim2.new(0, targetWidth, 1, 0)})
         tween:Play()
-        progressText.Text = math.floor(progress) .. "%"
+        progressText.Text = math.floor(percent) .. "%"
     end
     
     local function startInfiniteLoad()
         local tool = getEquippedTool()
-        if not tool then
-            statusLabel.Text = "❌ No tool equipped!"
+        if not tool or not extractQuantityInfo(tool.Name) then
+            statusLabel.Text = "❌ No valid seed pack/chest/egg equipped!"
+            infiniteBtn.Text = "🔃 ACTIVATE LOADER"
+            infiniteBtn.BackgroundColor3 = Color3.fromRGB(80, 120, 255)
             infiniteModeActive = false
             return
         end
-        
-        local realQty, patternInfo = extractQuantityInfo(tool.Name)
-        if not realQty then
-            statusLabel.Text = "❌ Not a valid seed/egg/kit!"
-            infiniteModeActive = false
-            return
-        end
-        
-        statusLabel.Text = "✅ Valid tool detected: "..tool.Name
+
+        lastTool = tool
+        statusLabel.Text = "🔄 Initializing loader..."
         
         if not toolStates[tool] then
+            local realQty, patternInfo = extractQuantityInfo(tool.Name)
             toolStates[tool] = {
                 realQty = realQty, 
                 addedQty = 0,
@@ -753,27 +741,14 @@ local function createInfiniteLoaderContent()
         local state = toolStates[tool]
         local startVisual = state.realQty + state.addedQty
         
-        for i = 3, 1, -1 do
-            if not infiniteModeActive then 
-                statusLabel.Text = "🛑 Process cancelled"
-                return 
-            end
-            
-            if not tool or not tool.Parent then
-                statusLabel.Text = "❌ Tool removed during countdown!"
-                infiniteModeActive = false
-                return
-            end
-            
+        for i = 5, 1, -1 do
+            if not infiniteModeActive then return end
             statusLabel.Text = "⏳ Starting in " .. i .. "s..."
-            updateProgress((3 - i) * 33)
+            updateProgress((5 - i) * 20)
             wait(1)
         end
         
         statusLabel.Text = "🚀 Increasing quantity..."
-        
-        local incrementCount = 0
-        local maxIncrements = TARGET_QUANTITY - startVisual
         
         while infiniteModeActive and (state.realQty + state.addedQty) < TARGET_QUANTITY do
             if not tool or not tool.Parent then
@@ -782,61 +757,28 @@ local function createInfiniteLoaderContent()
             end
             
             state.addedQty += 1
-            incrementCount += 1
             applyVisualQuantity(tool)
             
             local currentVisual = state.realQty + state.addedQty
-            local progress = math.min(100, (incrementCount / maxIncrements) * 100)
+            local progress = math.min(100, ((currentVisual - startVisual) / (TARGET_QUANTITY - startVisual)) * 100)
             updateProgress(progress)
             
-            if incrementCount % 100 == 0 then
-                statusLabel.Text = "🚀 Increasing... ("..currentVisual.."/"..TARGET_QUANTITY..")"
-            end
-            
-            wait(0.05)
+            wait(0.5)
         end
         
         if infiniteModeActive then
-            statusLabel.Text = "✅ Loader complete! ("..TARGET_QUANTITY..")"
-            updateProgress(100)
-            wait(2)
+            statusLabel.Text = "✅ Loader complete!"
         end
         
-        statusLabel.Text = "Ready to activate"
-        updateProgress(0)
-    end
-    
-    local function trackToolChanges()
-        while true do
-            wait(1)
-            for tool, state in pairs(toolStates) do
-                if tool and tool.Parent then
-                    local realQtyNow, patternInfoNow = extractQuantityInfo(tool.Name)
-                    if realQtyNow then
-                        if realQtyNow < state.realQty then
-                            local deduction = state.realQty - realQtyNow
-                            state.realQty = realQtyNow
-                            
-                            if state.addedQty > deduction then
-                                state.addedQty = state.addedQty - deduction
-                            else
-                                state.addedQty = 0
-                            end
-                            applyVisualQuantity(tool)
-                        end
-                        state.patternInfo = patternInfoNow or state.patternInfo
-                    end
-                else
-                    toolStates[tool] = nil
-                end
-            end
+        wait(2)
+        if infiniteModeActive then
+            statusLabel.Text = "Loader active"
+            updateProgress(100)
+        else
+            updateProgress(0)
         end
     end
     
-    if not toolTrackerConnection then
-        toolTrackerConnection = coroutine.wrap(trackToolChanges)()
-    end
-
     infiniteBtn.MouseButton1Click:Connect(function()
         infiniteModeActive = not infiniteModeActive
         
@@ -848,22 +790,18 @@ local function createInfiniteLoaderContent()
             if loadCoroutine then
                 coroutine.close(loadCoroutine)
             end
-            
-            loadCoroutine = coroutine.create(function()
-                pcall(startInfiniteLoad)
-            end)
-            
+            loadCoroutine = coroutine.create(startInfiniteLoad)
             coroutine.resume(loadCoroutine)
         else
             infiniteBtn.Text = "🔃 ACTIVATE LOADER"
             infiniteBtn.BackgroundColor3 = Color3.fromRGB(80, 120, 255)
             statusLabel.Text = "🛑 Process stopped"
             updateProgress(0)
+            
+            wait(1.5)
+            statusLabel.Text = "Ready to activate"
         end
     end)
-    
-    return content
-end
     
     local function trackQuantityChanges()
         while true do
