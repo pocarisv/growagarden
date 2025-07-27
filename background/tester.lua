@@ -630,21 +630,26 @@ local function createInfiniteLoaderContent()
     local infiniteModeActive = false
     local lastTool = nil
     local loadCoroutine = nil
-    local TARGET_QUANTITY = 9999
+    local TARGET_QUANTITY = 9999999
     local toolStates = {}
     
     local function getEquippedTool()
-        local character = player.Character
-        if not character then return nil end
-        
-        for _, tool in ipairs(character:GetChildren()) do
-            if tool:IsA("Tool") then
-                return tool
-            end
-        end
-        
-        return nil
+    local character = player.Character
+    if not character then
+        character = player.CharacterAdded:Wait()
     end
+    
+    if not character:FindFirstChild("HumanoidRootPart") then
+        character:WaitForChild("HumanoidRootPart", 2)
+    end
+    
+    for _, tool in ipairs(character:GetChildren()) do
+        if tool:IsA("Tool") and extractQuantityInfo(tool.Name) then
+            return tool
+        end
+    end
+    return nil
+end
     
     local function extractQuantityInfo(toolName)
         local seedPackMatch = {toolName:match("^(.-)(%[X)(%d+)(%])$")}
@@ -717,6 +722,11 @@ local function createInfiniteLoaderContent()
     end
     
     local function startInfiniteLoad()
+        if not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then
+            statusLabel.Text = "❌ Character not ready!"
+            infiniteModeActive = false
+            return
+        end
         local tool = getEquippedTool()
         if not tool or not extractQuantityInfo(tool.Name) then
             statusLabel.Text = "❌ No valid seed pack/chest/egg equipped!"
