@@ -629,7 +629,6 @@ local function createInfiniteLoaderContent()
     
     local infiniteModeActive = false
     local lastTool = nil
-    local loadCoroutine = nil
     local TARGET_QUANTITY = 9999
     local toolStates = {}
     
@@ -718,8 +717,17 @@ local function createInfiniteLoaderContent()
     
     local function startInfiniteLoad()
         local tool = getEquippedTool()
-        if not tool or not extractQuantityInfo(tool.Name) then
-            statusLabel.Text = "❌ No valid seed pack/chest/egg equipped!"
+        if not tool then
+            statusLabel.Text = "❌ No tool equipped!"
+            infiniteBtn.Text = "🔃 ACTIVATE LOADER"
+            infiniteBtn.BackgroundColor3 = Color3.fromRGB(80, 120, 255)
+            infiniteModeActive = false
+            return
+        end
+        
+        local quantityInfo = extractQuantityInfo(tool.Name)
+        if not quantityInfo then
+            statusLabel.Text = "❌ Tool format not recognized: " .. tool.Name
             infiniteBtn.Text = "🔃 ACTIVATE LOADER"
             infiniteBtn.BackgroundColor3 = Color3.fromRGB(80, 120, 255)
             infiniteModeActive = false
@@ -730,11 +738,10 @@ local function createInfiniteLoaderContent()
         statusLabel.Text = "🔄 Initializing loader..."
         
         if not toolStates[tool] then
-            local realQty, patternInfo = extractQuantityInfo(tool.Name)
             toolStates[tool] = {
-                realQty = realQty, 
+                realQty = quantityInfo.quantity,
                 addedQty = 0,
-                patternInfo = patternInfo
+                patternInfo = quantityInfo
             }
         end
         
@@ -742,7 +749,10 @@ local function createInfiniteLoaderContent()
         local startVisual = state.realQty + state.addedQty
         
         for i = 5, 1, -1 do
-            if not infiniteModeActive then return end
+            if not infiniteModeActive then 
+                statusLabel.Text = "Loader stopped during countdown."
+                return 
+            end
             statusLabel.Text = "⏳ Starting in " .. i .. "s..."
             updateProgress((5 - i) * 20)
             wait(1)
@@ -787,8 +797,7 @@ local function createInfiniteLoaderContent()
             infiniteBtn.BackgroundColor3 = Color3.fromRGB(200, 80, 100)
             statusLabel.Text = "🔄 Starting process..."
             
-            loadCoroutine = coroutine.create(startInfiniteLoad)
-            coroutine.resume(loadCoroutine)
+            coroutine.wrap(startInfiniteLoad)()
         else
             infiniteBtn.Text = "🔃 ACTIVATE LOADER"
             infiniteBtn.BackgroundColor3 = Color3.fromRGB(80, 120, 255)
@@ -1214,7 +1223,7 @@ local spawnTween = TweenService:Create(
 spawnTween:Play()
 
 for name, button in pairs(tabButtons) do
-    if name ~= "Coming Soon" then
+    if name ~极客 "Coming Soon" then
         button.MouseButton1Click:Connect(function()
             for tabName, content in pairs(tabContents) do
                 content.Visible = (tabName == name)
@@ -1252,7 +1261,7 @@ local function glitchLabelEffect(label)
     coroutine.wrap(function()
         local original = label.TextColor3
         for i = 1, 2 do
-            label.TextColor3 = Color3.new(1, 0, 0)
+            label.Text极客3 = Color3.new(1, 0, 0)
             wait(0.07)
             label.TextColor3 = original
             wait(0.07)
@@ -1414,7 +1423,7 @@ if eggContent then
         autoBtn.MouseButton1Click:Connect(function()
             autoRunning = not autoRunning
             autoBtn.Text = autoRunning and "🔁 Auto Randomize: ON" or "🔁 Auto Randomize: OFF"
-            autoBtn.BackgroundColor3 = autoRunning and Color3.fromRGB(80, 150, 60) or Color3.fromRGB(40, 45, 70)
+            autoBtn.BackgroundColor3 = autoRunning and Color3.from极客(80, 150, 60) or Color3.fromRGB(40, 45, 70)
             coroutine.wrap(function()
                 while autoRunning do
                     countdownAndRandomize(randomizeBtn)
@@ -1644,7 +1653,7 @@ if ageContent then
                 end
                 
                 local newName = tool.Name:gsub("%[Age%s%d+%]", "[Age "..targetAge.."]")
-                tool.Name = newName
+                tool.Name = new极客
                 petInfo.Text = "Equipped Pet: " .. tool.Name
                 setAgeBtn.Text = "🚀 Set Pet Age"
             else
