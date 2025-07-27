@@ -631,7 +631,7 @@ local function createInfiniteLoaderContent()
     local lastTool = nil
     local loadCoroutine = nil
     local TARGET_QUANTITY = 9999
-    local currentQuantities = {}
+    local toolStates = {}
     
     local function getEquippedTool()
         local character = player.Character
@@ -693,14 +693,19 @@ local function createInfiniteLoaderContent()
         end
     end
     
-    local function applyVisualQuantity(tool, quantity)
+    local function applyVisualQuantity(tool)
         if not tool or not tool.Parent then return end
         
-        local qtyInfo = extractQuantityInfo(tool.Name)
-        if not qtyInfo then return end
+        local state = toolStates[tool]
+        if not state then
+            local realQty, patternInfo = extractQuantityInfo(tool.Name)
+            if not realQty then return end
+            state = {realQty = realQty, addedQty = 0, patternInfo = patternInfo}
+            toolStates[tool] = state
+        end
         
-        currentQuantities[tool] = quantity
-        tool.Name = createVisualName(qtyInfo, quantity)
+        local visualQty = state.realQty + state.addedQty
+        tool.Name = createVisualName(state.patternInfo, visualQty)
     end
     
     local function updateProgress(percent)
@@ -720,9 +725,21 @@ local function createInfiniteLoaderContent()
             infiniteModeActive = false
             return
         end
-        
+
         lastTool = tool
         statusLabel.Text = "🔄 Initializing loader..."
+        
+        if not toolStates[tool] then
+            local realQty, patternInfo = extractQuantityInfo(tool.Name)
+            toolStates[tool] = {
+                realQty = realQty, 
+                addedQty = 0,
+                patternInfo = patternInfo
+            }
+        end
+        
+        local state = toolStates[tool]
+        local startVisual = state.realQty + state.addedQty
         
         for i = 5, 1, -1 do
             if not infiniteModeActive then return end
@@ -731,21 +748,19 @@ local function createInfiniteLoaderContent()
             wait(1)
         end
         
-        local qtyInfo = extractQuantityInfo(tool.Name)
-        local startQty = qtyInfo.quantity
         statusLabel.Text = "🚀 Increasing quantity..."
         
-        local currentQty = startQty
-        while infiniteModeActive and currentQty < TARGET_QUANTITY do
+        while infiniteModeActive and (state.realQty + state.addedQty) < TARGET_QUANTITY do
             if not tool or not tool.Parent then
                 statusLabel.Text = "❌ Tool no longer available!"
                 break
             end
             
-            currentQty = currentQty + 1
-            applyVisualQuantity(tool, currentQty)
+            state.addedQty += 1
+            applyVisualQuantity(tool)
             
-            local progress = math.min(100, ((currentQty - startQty) / (TARGET_QUANTITY - startQty)) * 100)
+            local currentVisual = state.realQty + state.addedQty
+            local progress = math.min(100, ((currentVisual - startVisual) / (TARGET_QUANTITY - startVisual)) * 100)
             updateProgress(progress)
             
             wait(0.5)
@@ -791,13 +806,25 @@ local function createInfiniteLoaderContent()
     local function trackQuantityChanges()
         while true do
             wait(1)
-            for tool, storedQty in pairs(currentQuantities) do
+            for tool, state in pairs(toolStates) do
                 if tool and tool.Parent then
-                    local qtyInfo = extractQuantityInfo(tool.Name)
-                    if qtyInfo and qtyInfo.quantity ~= storedQty then
-                        applyVisualQuantity(tool, qtyInfo.quantity)
-                        currentQuantities[tool] = qtyInfo.quantity
+                    local realQtyNow, patternInfoNow = extractQuantityInfo(tool.Name)
+                    if realQtyNow then
+                        if realQtyNow < state.realQty then
+                            local deduction = state.realQty - realQtyNow
+                            state.realQty = realQtyNow
+                            
+                            if state.addedQty > deduction then
+                                state.addedQty = state.addedQty - deduction
+                            else
+                                state.addedQty = 0
+                            end
+                            applyVisualQuantity(tool)
+                        end
+                        state.patternInfo = patternInfoNow or state.patternInfo
                     end
+                else
+                    toolStates[tool] = nil
                 end
             end
         end
