@@ -787,9 +787,6 @@ local function createInfiniteLoaderContent()
             infiniteBtn.BackgroundColor3 = Color3.fromRGB(200, 80, 100)
             statusLabel.Text = "🔄 Starting process..."
             
-            if loadCoroutine then
-                coroutine.close(loadCoroutine)
-            end
             loadCoroutine = coroutine.create(startInfiniteLoad)
             coroutine.resume(loadCoroutine)
         else
