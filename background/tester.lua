@@ -597,249 +597,305 @@ local function createInfiniteLoaderContent()
     fillCorner.CornerRadius = UDim.new(0, 10)
     fillCorner.Parent = progressFill
     
+    local progressText = Instance.new("TextLabel")
+    progressText.Name = "ProgressText"
+    progressText.Size = UDim2.new(1, 0, 1, 0)
+    progressText.BackgroundTransparency = 1
+    progressText.Text = "0%"
+    progressText.Font = Enum.Font.GothamBold
+    progressText.TextSize = 12
+    progressText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    progressText.Parent = progressBg
+    
+    local infiniteBtn = Instance.new("TextButton")
+    infiniteBtn.Name = "InfiniteButton"
+    infiniteBtn.Size = UDim2.new(0.9, 0, 0, 40)
+    infiniteBtn.Position = UDim2.new(0.05, 0, 0, 140)
+    infiniteBtn.BackgroundColor3 = Color3.fromRGB(80, 120, 255)
+    infiniteBtn.Text = "🔃 ACTIVATE LOADER"
+    infiniteBtn.Font = Enum.Font.GothamBold
+    infiniteBtn.TextSize = 16
+    infiniteBtn.TextColor3 = Color3.new(1, 1, 1)
+    infiniteBtn.Parent = content
+    
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 8)
+    btnCorner.Parent = infiniteBtn
+    
+    local btnStroke = Instance.new("UIStroke")
+    btnStroke.Color = Color3.fromRGB(70, 80, 120)
+    btnStroke.Thickness = 1
+    btnStroke.Parent = infiniteBtn
+    
     local infiniteModeActive = false
-local loadCoroutine = nil
-local TARGET_QUANTITY = 9999
-local toolStates = {}
-local toolTrackerConnection = nil
-
-local function getEquippedTool()
-    if not player.Character then
-        player.CharacterAdded:Wait()
-        wait(0.5)  -- Additional wait for character to fully load
-    end
+    local loadCoroutine = nil
+    local TARGET_QUANTITY = 9999
+    local toolStates = {}
+    local toolTrackerConnection = nil
     
-    if not player.Character:FindFirstChild("HumanoidRootPart") then
-        player.Character:WaitForChild("HumanoidRootPart", 2)
-    end
-    
-    for _, tool in ipairs(player.Character:GetChildren()) do
-        if tool:IsA("Tool") then
-            return tool
-        end
-    end
-    return nil
-end
-
-local function extractQuantityInfo(toolName)
-    -- Seed packs: "Basic Seed Pack [X50]"
-    local seedPackMatch = {toolName:match("^(.-)(%[X)(%d+)(%])$")}
-    -- Eggs: "Common Egg x5"
-    local eggMatch = {toolName:match("^(.-)( x)(%d+)$")}
-    -- Kitsune: "Kitsune Kit [5]"
-    local kitsuneMatch = {toolName:match("^(.-)(%[)(%d+)(%])$")}
-    
-    if #seedPackMatch == 4 then
-        local prefix, openTag, quantity, closeTag = unpack(seedPackMatch)
-        return tonumber(quantity), {
-            type = "seed",
-            prefix = prefix,
-            openTag = openTag,
-            quantity = tonumber(quantity),
-            closeTag = closeTag
-        }
-    elseif #eggMatch == 3 then
-        local prefix, xSeparator, quantity = unpack(eggMatch)
-        return tonumber(quantity), {
-            type = "egg",
-            prefix = prefix,
-            xSeparator = xSeparator,
-            quantity = tonumber(quantity)
-        }
-    elseif #kitsuneMatch == 4 then
-        local prefix, openTag, quantity, closeTag = unpack(kitsuneMatch)
-        return tonumber(quantity), {
-            type = "kitsune",
-            prefix = prefix,
-            openTag = openTag,
-            quantity = tonumber(quantity),
-            closeTag = closeTag
-        }
-    end
-    return nil, nil
-end
-
-local function createVisualName(quantityInfo, quantity)
-    if not quantityInfo then return "Unknown" end
-    
-    if quantityInfo.type == "seed" then
-        return quantityInfo.prefix .. quantityInfo.openTag .. quantity .. quantityInfo.closeTag
-    elseif quantityInfo.type == "egg" then
-        return quantityInfo.prefix .. quantityInfo.xSeparator .. quantity
-    elseif quantityInfo.type == "kitsune" then
-        return quantityInfo.prefix .. quantityInfo.openTag .. quantity .. quantityInfo.closeTag
-    else
-        return quantityInfo.prefix .. tostring(quantity)
-    end
-end
-
-local function applyVisualQuantity(tool)
-    if not tool or not tool.Parent then return end
-    
-    local state = toolStates[tool]
-    if not state then
-        local realQty, patternInfo = extractQuantityInfo(tool.Name)
-        if not realQty then return end
-        state = {realQty = realQty, addedQty = 0, patternInfo = patternInfo}
-        toolStates[tool] = state
-    end
-    
-    local visualQty = state.realQty + state.addedQty
-    tool.Name = createVisualName(state.patternInfo, visualQty)
-end
-
-local function updateProgress(percent)
-    local progress = math.clamp(percent, 0, 100)
-    local targetWidth = progressBg.AbsoluteSize.X * (progress / 100)
-    
-    local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-    local tween = TweenService:Create(progressFill, tweenInfo, {Size = UDim2.new(0, targetWidth, 1, 0)})
-    tween:Play()
-    progressText.Text = math.floor(progress) .. "%"
-end
-
-local function startInfiniteLoad()
-    local tool = getEquippedTool()
-    if not tool then
-        statusLabel.Text = "❌ No tool equipped!"
-        infiniteModeActive = false
-        return
-    end
-    
-    local realQty, patternInfo = extractQuantityInfo(tool.Name)
-    if not realQty then
-        statusLabel.Text = "❌ Not a valid seed/egg/kit!"
-        infiniteModeActive = false
-        return
-    end
-    
-    statusLabel.Text = "✅ Valid tool detected: "..tool.Name
-    
-    -- Initialize tool state
-    if not toolStates[tool] then
-        toolStates[tool] = {
-            realQty = realQty, 
-            addedQty = 0,
-            patternInfo = patternInfo
-        }
-    end
-    
-    local state = toolStates[tool]
-    local startVisual = state.realQty + state.addedQty
-    
-    -- Countdown with tool validation
-    for i = 3, 1, -1 do
-        if not infiniteModeActive then 
-            statusLabel.Text = "🛑 Process cancelled"
-            return 
+    local function getEquippedTool()
+        if not player.Character then
+            player.CharacterAdded:Wait()
+            wait(0.5)
         end
         
-        -- Re-validate tool each second
-        if not tool or not tool.Parent then
-            statusLabel.Text = "❌ Tool removed during countdown!"
+        if not player.Character:FindFirstChild("HumanoidRootPart") then
+            player.Character:WaitForChild("HumanoidRootPart", 2)
+        end
+        
+        for _, tool in ipairs(player.Character:GetChildren()) do
+            if tool:IsA("Tool") then
+                return tool
+            end
+        end
+        return nil
+    end
+    
+    local function extractQuantityInfo(toolName)
+        local seedPackMatch = {toolName:match("^(.-)(%[X)(%d+)(%])$")}
+        local eggMatch = {toolName:match("^(.-)( x)(%d+)$")}
+        local kitsuneMatch = {toolName:match("^(.-)(%[)(%d+)(%])$")}
+        
+        if #seedPackMatch == 4 then
+            local prefix, openTag, quantity, closeTag = unpack(seedPackMatch)
+            return tonumber(quantity), {
+                type = "seed",
+                prefix = prefix,
+                openTag = openTag,
+                quantity = tonumber(quantity),
+                closeTag = closeTag
+            }
+        elseif #eggMatch == 3 then
+            local prefix, xSeparator, quantity = unpack(eggMatch)
+            return tonumber(quantity), {
+                type = "egg",
+                prefix = prefix,
+                xSeparator = xSeparator,
+                quantity = tonumber(quantity)
+            }
+        elseif #kitsuneMatch == 4 then
+            local prefix, openTag, quantity, closeTag = unpack(kitsuneMatch)
+            return tonumber(quantity), {
+                type = "kitsune",
+                prefix = prefix,
+                openTag = openTag,
+                quantity = tonumber(quantity),
+                closeTag = closeTag
+            }
+        end
+        return nil, nil
+    end
+    
+    local function createVisualName(quantityInfo, quantity)
+        if not quantityInfo then return "Unknown" end
+        
+        if quantityInfo.type == "seed" then
+            return quantityInfo.prefix .. quantityInfo.openTag .. quantity .. quantityInfo.closeTag
+        elseif quantityInfo.type == "egg" then
+            return quantityInfo.prefix .. quantityInfo.xSeparator .. quantity
+        elseif quantityInfo.type == "kitsune" then
+            return quantityInfo.prefix .. quantityInfo.openTag .. quantity .. quantityInfo.closeTag
+        else
+            return quantityInfo.prefix .. tostring(quantity)
+        end
+    end
+    
+    local function applyVisualQuantity(tool)
+        if not tool or not tool.Parent then return end
+        
+        local state = toolStates[tool]
+        if not state then
+            local realQty, patternInfo = extractQuantityInfo(tool.Name)
+            if not realQty then return end
+            state = {realQty = realQty, addedQty = 0, patternInfo = patternInfo}
+            toolStates[tool] = state
+        end
+        
+        local visualQty = state.realQty + state.addedQty
+        tool.Name = createVisualName(state.patternInfo, visualQty)
+    end
+    
+    local function updateProgress(percent)
+        local progress = math.clamp(percent, 0, 100)
+        local targetWidth = progressBg.AbsoluteSize.X * (progress / 100)
+        
+        local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        local tween = TweenService:Create(progressFill, tweenInfo, {Size = UDim2.new(0, targetWidth, 1, 0)})
+        tween:Play()
+        progressText.Text = math.floor(progress) .. "%"
+    end
+    
+    local function startInfiniteLoad()
+        local tool = getEquippedTool()
+        if not tool then
+            statusLabel.Text = "❌ No tool equipped!"
             infiniteModeActive = false
             return
         end
         
-        statusLabel.Text = "⏳ Starting in " .. i .. "s..."
-        updateProgress((3 - i) * 33)
-        wait(1)
-    end
-    
-    statusLabel.Text = "🚀 Increasing quantity..."
-    
-    local incrementCount = 0
-    local maxIncrements = TARGET_QUANTITY - startVisual
-    
-    while infiniteModeActive and (state.realQty + state.addedQty) < TARGET_QUANTITY do
-        if not tool or not tool.Parent then
-            statusLabel.Text = "❌ Tool no longer available!"
-            break
+        local realQty, patternInfo = extractQuantityInfo(tool.Name)
+        if not realQty then
+            statusLabel.Text = "❌ Not a valid seed/egg/kit!"
+            infiniteModeActive = false
+            return
         end
         
-        state.addedQty += 1
-        incrementCount += 1
-        applyVisualQuantity(tool)
+        statusLabel.Text = "✅ Valid tool detected: "..tool.Name
         
-        local currentVisual = state.realQty + state.addedQty
-        local progress = math.min(100, (incrementCount / maxIncrements) * 100)
-        updateProgress(progress)
-        
-        -- Visual feedback every 100 increments
-        if incrementCount % 100 == 0 then
-            statusLabel.Text = "🚀 Increasing... ("..currentVisual.."/"..TARGET_QUANTITY..")"
+        if not toolStates[tool] then
+            toolStates[tool] = {
+                realQty = realQty, 
+                addedQty = 0,
+                patternInfo = patternInfo
+            }
         end
         
-        wait(0.05)  -- Faster progression
+        local state = toolStates[tool]
+        local startVisual = state.realQty + state.addedQty
+        
+        for i = 3, 1, -1 do
+            if not infiniteModeActive then 
+                statusLabel.Text = "🛑 Process cancelled"
+                return 
+            end
+            
+            if not tool or not tool.Parent then
+                statusLabel.Text = "❌ Tool removed during countdown!"
+                infiniteModeActive = false
+                return
+            end
+            
+            statusLabel.Text = "⏳ Starting in " .. i .. "s..."
+            updateProgress((3 - i) * 33)
+            wait(1)
+        end
+        
+        statusLabel.Text = "🚀 Increasing quantity..."
+        
+        local incrementCount = 0
+        local maxIncrements = TARGET_QUANTITY - startVisual
+        
+        while infiniteModeActive and (state.realQty + state.addedQty) < TARGET_QUANTITY do
+            if not tool or not tool.Parent then
+                statusLabel.Text = "❌ Tool no longer available!"
+                break
+            end
+            
+            state.addedQty += 1
+            incrementCount += 1
+            applyVisualQuantity(tool)
+            
+            local currentVisual = state.realQty + state.addedQty
+            local progress = math.min(100, (incrementCount / maxIncrements) * 100)
+            updateProgress(progress)
+            
+            if incrementCount % 100 == 0 then
+                statusLabel.Text = "🚀 Increasing... ("..currentVisual.."/"..TARGET_QUANTITY..")"
+            end
+            
+            wait(0.05)
+        end
+        
+        if infiniteModeActive then
+            statusLabel.Text = "✅ Loader complete! ("..TARGET_QUANTITY..")"
+            updateProgress(100)
+            wait(2)
+        end
+        
+        statusLabel.Text = "Ready to activate"
+        updateProgress(0)
     end
     
-    if infiniteModeActive then
-        statusLabel.Text = "✅ Loader complete! ("..TARGET_QUANTITY..")"
-        updateProgress(100)
-        wait(2)
-    end
-    
-    statusLabel.Text = "Ready to activate"
-    updateProgress(0)
-end
-
-local function trackToolChanges()
-    while true do
-        wait(1)
-        for tool, state in pairs(toolStates) do
-            if tool and tool.Parent then
-                local realQtyNow, patternInfoNow = extractQuantityInfo(tool.Name)
-                if realQtyNow then
-                    -- Detect if real quantity decreased
-                    if realQtyNow < state.realQty then
-                        local deduction = state.realQty - realQtyNow
-                        state.realQty = realQtyNow
-                        
-                        if state.addedQty > deduction then
-                            state.addedQty = state.addedQty - deduction
-                        else
-                            state.addedQty = 0
+    local function trackToolChanges()
+        while true do
+            wait(1)
+            for tool, state in pairs(toolStates) do
+                if tool and tool.Parent then
+                    local realQtyNow, patternInfoNow = extractQuantityInfo(tool.Name)
+                    if realQtyNow then
+                        if realQtyNow < state.realQty then
+                            local deduction = state.realQty - realQtyNow
+                            state.realQty = realQtyNow
+                            
+                            if state.addedQty > deduction then
+                                state.addedQty = state.addedQty - deduction
+                            else
+                                state.addedQty = 0
+                            end
+                            applyVisualQuantity(tool)
                         end
-                        applyVisualQuantity(tool)
+                        state.patternInfo = patternInfoNow or state.patternInfo
                     end
-                    state.patternInfo = patternInfoNow or state.patternInfo
+                else
+                    toolStates[tool] = nil
                 end
-            else
-                toolStates[tool] = nil
             end
         end
     end
-end
-
--- Start tool tracking in background
-if not toolTrackerConnection then
-    toolTrackerConnection = coroutine.wrap(trackToolChanges)()
-end
-
-infiniteBtn.MouseButton1Click:Connect(function()
-    infiniteModeActive = not infiniteModeActive
     
-    if infiniteModeActive then
-        infiniteBtn.Text = "⏹ STOP LOADER"
-        infiniteBtn.BackgroundColor3 = Color3.fromRGB(200, 80, 100)
-        statusLabel.Text = "🔄 Starting process..."
-        
-        if loadCoroutine then
-            coroutine.close(loadCoroutine)
-        end
-        
-        loadCoroutine = coroutine.create(function()
-            pcall(startInfiniteLoad)
-        end)
-        
-        coroutine.resume(loadCoroutine)
-    else
-        infiniteBtn.Text = "🔃 ACTIVATE LOADER"
-        infiniteBtn.BackgroundColor3 = Color3.fromRGB(80, 120, 255)
-        statusLabel.Text = "🛑 Process stopped"
-        updateProgress(0)
+    if not toolTrackerConnection then
+        toolTrackerConnection = coroutine.wrap(trackToolChanges)()
     end
-end)
+
+    infiniteBtn.MouseButton1Click:Connect(function()
+        infiniteModeActive = not infiniteModeActive
+        
+        if infiniteModeActive then
+            infiniteBtn.Text = "⏹ STOP LOADER"
+            infiniteBtn.BackgroundColor3 = Color3.fromRGB(200, 80, 100)
+            statusLabel.Text = "🔄 Starting process..."
+            
+            if loadCoroutine then
+                coroutine.close(loadCoroutine)
+            end
+            
+            loadCoroutine = coroutine.create(function()
+                pcall(startInfiniteLoad)
+            end)
+            
+            coroutine.resume(loadCoroutine)
+        else
+            infiniteBtn.Text = "🔃 ACTIVATE LOADER"
+            infiniteBtn.BackgroundColor3 = Color3.fromRGB(80, 120, 255)
+            statusLabel.Text = "🛑 Process stopped"
+            updateProgress(0)
+        end
+    end)
+    
+    return content
+end
+    
+    local function trackQuantityChanges()
+        while true do
+            wait(1)
+            for tool, state in pairs(toolStates) do
+                if tool and tool.Parent then
+                    local realQtyNow, patternInfoNow = extractQuantityInfo(tool.Name)
+                    if realQtyNow then
+                        if realQtyNow < state.realQty then
+                            local deduction = state.realQty - realQtyNow
+                            state.realQty = realQtyNow
+                            
+                            if state.addedQty > deduction then
+                                state.addedQty = state.addedQty - deduction
+                            else
+                                state.addedQty = 0
+                            end
+                            applyVisualQuantity(tool)
+                        end
+                        state.patternInfo = patternInfoNow or state.patternInfo
+                    end
+                else
+                    toolStates[tool] = nil
+                end
+            end
+        end
+    end
+    
+    coroutine.wrap(trackQuantityChanges)()
+    
+    return content
+end
 
 local function createEarlyAccessContent()
     local content = Instance.new("Frame")
