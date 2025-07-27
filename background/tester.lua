@@ -550,32 +550,34 @@ local function createInfiniteLoaderContent()
     
     local title = Instance.new("TextLabel")
     title.Name = "Title"
-    title.Size = UDim2.new(1, 0, 0, 30)
-    title.Position = UDim2.new(0, 0, 0, 10)
+    title.Size = UDim2.new(1, -10, 0, 40)
+    title.Position = UDim2.new(0, 5, 0, 10)
     title.BackgroundTransparency = 1
     title.Text = "∞ Seed Pack/Egg/Kitsune Chest Loader"
     title.Font = Enum.Font.GothamBold
-    title.TextSize = 16
+    title.TextSize = 14
     title.TextColor3 = Color3.fromRGB(180, 185, 230)
     title.TextXAlignment = Enum.TextXAlignment.Center
+    title.TextWrapped = true
     title.Parent = content
     
     local statusLabel = Instance.new("TextLabel")
     statusLabel.Name = "StatusLabel"
-    statusLabel.Size = UDim2.new(0.9, 0, 0, 25)
-    statusLabel.Position = UDim2.new(0.05, 0, 0, 50)
+    statusLabel.Size = UDim2.new(0.9, 0, 0, 40)
+    statusLabel.Position = UDim2.new(0.05, 0, 0, 60)
     statusLabel.BackgroundTransparency = 1
     statusLabel.Text = "Ready to activate"
     statusLabel.Font = Enum.Font.Gotham
     statusLabel.TextSize = 14
     statusLabel.TextColor3 = Color3.fromRGB(180, 200, 230)
     statusLabel.TextXAlignment = Enum.TextXAlignment.Left
+    statusLabel.TextWrapped = true
     statusLabel.Parent = content
     
     local progressBg = Instance.new("Frame")
     progressBg.Name = "ProgressBG"
     progressBg.Size = UDim2.new(0.9, 0, 0, 20)
-    progressBg.Position = UDim2.new(0.05, 0, 0, 80)
+    progressBg.Position = UDim2.new(0.05, 0, 0, 110)
     progressBg.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
     progressBg.BorderSizePixel = 0
     progressBg.Parent = content
@@ -608,7 +610,7 @@ local function createInfiniteLoaderContent()
     local infiniteBtn = Instance.new("TextButton")
     infiniteBtn.Name = "InfiniteButton"
     infiniteBtn.Size = UDim2.new(0.9, 0, 0, 40)
-    infiniteBtn.Position = UDim2.new(0.05, 0, 0, 110)
+    infiniteBtn.Position = UDim2.new(0.05, 0, 0, 140)
     infiniteBtn.BackgroundColor3 = Color3.fromRGB(80, 120, 255)
     infiniteBtn.Text = "🔃 ACTIVATE LOADER"
     infiniteBtn.Font = Enum.Font.GothamBold
@@ -647,7 +649,7 @@ local function createInfiniteLoaderContent()
     local function extractQuantityInfo(toolName)
         local seedPackMatch = {toolName:match("^(.-)(%[X)(%d+)(%])$")}
         local eggMatch = {toolName:match("^(.-)( x)(%d+)$")}
-        local kitsuneMatch = {toolName:match("^(.-)(%[X)(%d+)(%])$")}
+        local kitsuneMatch = {toolName:match("^(.-)(%[)(%d+)(%])$")}
         
         if #seedPackMatch == 4 then
             local prefix, openTag, quantity, closeTag = unpack(seedPackMatch)
