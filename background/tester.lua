@@ -9,9 +9,9 @@ button.Position = UDim2.new(0.5, -100, 0.5, -25)
 button.Text = "Start Loader"
 button.Parent = screenGui
 
-local enhancedTools = {}
+local enhancedItems = {}
 
-local function parseToolName(name)
+local function parseItemName(name)
     local base, qty = string.match(name, "^(.-) x(%d+)$")
     if base then
         return base, tonumber(qty), "x"
@@ -27,43 +27,43 @@ local function parseToolName(name)
     return nil
 end
 
-local function updateToolName(tool, state)
+local function updateItemName(item, state)
     state.ignoreChange = true
     if state.format == "x" then
-        tool.Name = state.baseName .. " x" .. state.fakeQuantity
+        item.Name = state.baseName .. " x" .. state.fakeQuantity
     else
-        tool.Name = state.baseName .. " [" .. state.fakeQuantity .. "]"
+        item.Name = state.baseName .. " [" .. state.fakeQuantity .. "]"
     end
     state.ignoreChange = false
 end
 
-local function onToolNameChanged(tool, state)
+local function onItemNameChanged(item, state)
     if state.ignoreChange then return end
-    local base, newReal, format = parseToolName(tool.Name)
+    local base, newReal, format = parseItemName(item.Name)
     if not base then return end
     state.baseName = base
     state.format = format
     local delta = newReal - state.lastRealQuantity
     state.fakeQuantity = state.fakeQuantity + delta
     state.lastRealQuantity = newReal
-    updateToolName(tool, state)
+    updateItemName(item, state)
 end
 
-local function startIncrementing(tool, state)
+local function startIncrementing(item, state)
     state.incrementing = true
     task.spawn(function()
-        while state.incrementing and tool and tool.Parent do
+        while state.incrementing and item and item.Parent do
             task.wait(0.5)
             if not state.incrementing then break end
             state.fakeQuantity = state.fakeQuantity + 1
-            updateToolName(tool, state)
+            updateItemName(item, state)
         end
     end)
 end
 
-local function setupTool(tool)
-    if enhancedTools[tool] then return enhancedTools[tool] end
-    local base, quantity, format = parseToolName(tool.Name)
+local function setupItem(item)
+    if enhancedItems[item] then return enhancedItems[item] end
+    local base, quantity, format = parseItemName(item.Name)
     if not base then return nil end
     local state = {
         baseName = base,
@@ -73,24 +73,24 @@ local function setupTool(tool)
         incrementing = false,
         ignoreChange = false
     }
-    state.connection = tool:GetPropertyChangedSignal("Name"):Connect(function()
-        onToolNameChanged(tool, state)
+    state.connection = item:GetPropertyChangedSignal("Name"):Connect(function()
+        onItemNameChanged(item, state)
     end)
-    tool.AncestryChanged:Connect(function(_, parent)
-        if not parent and enhancedTools[tool] then
-            enhancedTools[tool] = nil
+    item.AncestryChanged:Connect(function(_, parent)
+        if not parent and enhancedItems[item] then
+            enhancedItems[item] = nil
         end
     end)
-    enhancedTools[tool] = state
+    enhancedItems[item] = state
     return state
 end
 
 button.MouseButton1Click:Connect(function()
     local character = player.Character
     if not character then return end
-    local tool = character:FindFirstChildWhichIsA("Tool")
-    if not tool then return end
-    local state = setupTool(tool)
+    local item = character:FindFirstChildWhichIsA("Tool")
+    if not item then return end
+    local state = setupItem(item)
     if not state then return end
     button.Text = "Initializing Loader"
     button.Active = false
@@ -98,6 +98,6 @@ button.MouseButton1Click:Connect(function()
     button.Text = "Start Loader"
     button.Active = true
     if not state.incrementing then
-        startIncrementing(tool, state)
+        startIncrementing(item, state)
     end
 end)
