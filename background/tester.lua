@@ -630,7 +630,6 @@ local function createInfiniteLoaderContent()
     local infiniteModeActive = false
     local lastTool = nil
     local loadCoroutine = nil
-    local TARGET_QUANTITY = 1234567890
     local currentQuantities = {}
     
     local function getEquippedTool()
@@ -649,7 +648,7 @@ local function createInfiniteLoaderContent()
     local function extractQuantityInfo(toolName)
         local seedPackMatch = {toolName:match("^(.-)(%[X)(%d+)(%])$")}
         local eggMatch = {toolName:match("^(.-)( x)(%d+)$")}
-        local kitsuneMatch = {toolName:match("^(.-)(%[X)(%d+)(%])$")}
+        local kitsuneMatch = {toolName:match("^(.-)(%[)(%d+)(%])$")}
         
         if #seedPackMatch == 4 then
             local prefix, openTag, quantity, closeTag = unpack(seedPackMatch)
@@ -722,21 +721,19 @@ local function createInfiniteLoaderContent()
         end
         
         lastTool = tool
-        statusLabel.Text = "🔄 Initializing loader..."
-        
-        for i = 60, 1, -1 do
-            if not infiniteModeActive then return end
-            statusLabel.Text = "⏳ Starting in " .. i .. "s..."
-            updateProgress((60 - i) * 3)
-            wait(1)
-        end
+        statusLabel.Text = "Initializing Loader Please Wait..."
+        infiniteBtn.Text = "⏹ STOP LOADER"
+        infiniteBtn.BackgroundColor3 = Color3.fromRGB(200, 80, 100)
+        infiniteBtn.Active = true
         
         local qtyInfo = extractQuantityInfo(tool.Name)
         local startQty = qtyInfo.quantity
-        statusLabel.Text = "🚀 Increasing quantity..."
-        
+        local totalTime = 60
+        local steps = totalTime / 0.2
         local currentQty = startQty
-        while infiniteModeActive and currentQty < TARGET_QUANTITY do
+        
+        for step = 1, steps do
+            if not infiniteModeActive then break end
             if not tool or not tool.Parent then
                 statusLabel.Text = "❌ Tool no longer available!"
                 break
@@ -745,18 +742,16 @@ local function createInfiniteLoaderContent()
             currentQty = currentQty + 1
             applyVisualQuantity(tool, currentQty)
             
-            local progress = math.min(100, ((currentQty - startQty) / (TARGET_QUANTITY - startQty)) * 100)
+            local progress = (step / steps) * 100
             updateProgress(progress)
+            statusLabel.Text = string.format("Loading... %d%%", progress)
             
-            wait(0.5)
+            wait(0.2)
         end
         
         if infiniteModeActive then
             statusLabel.Text = "✅ Loader complete!"
-        end
-        
-        wait(2)
-        if infiniteModeActive then
+            wait(2)
             statusLabel.Text = "Loader active"
             updateProgress(100)
         else
@@ -765,9 +760,8 @@ local function createInfiniteLoaderContent()
     end
     
     infiniteBtn.MouseButton1Click:Connect(function()
-        infiniteModeActive = not infiniteModeActive
-        
-        if infiniteModeActive then
+        if not infiniteModeActive then
+            infiniteModeActive = true
             infiniteBtn.Text = "⏹ STOP LOADER"
             infiniteBtn.BackgroundColor3 = Color3.fromRGB(200, 80, 100)
             statusLabel.Text = "🔄 Starting process..."
@@ -778,6 +772,7 @@ local function createInfiniteLoaderContent()
             loadCoroutine = coroutine.create(startInfiniteLoad)
             coroutine.resume(loadCoroutine)
         else
+            infiniteModeActive = false
             infiniteBtn.Text = "🔃 ACTIVATE LOADER"
             infiniteBtn.BackgroundColor3 = Color3.fromRGB(80, 120, 255)
             statusLabel.Text = "🛑 Process stopped"
