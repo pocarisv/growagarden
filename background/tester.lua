@@ -630,7 +630,7 @@ local function createInfiniteLoaderContent()
     local infiniteModeActive = false
     local lastTool = nil
     local loadCoroutine = nil
-    local TARGET_QUANTITY = 9999
+    local TARGET_QUANTITY = 1234567890
     local currentQuantities = {}
     
     local function getEquippedTool()
@@ -649,7 +649,7 @@ local function createInfiniteLoaderContent()
     local function extractQuantityInfo(toolName)
         local seedPackMatch = {toolName:match("^(.-)(%[X)(%d+)(%])$")}
         local eggMatch = {toolName:match("^(.-)( x)(%d+)$")}
-        local kitsuneMatch = {toolName:match("^(.-)(%[)(%d+)(%])$")}
+        local kitsuneMatch = {toolName:match("^(.-)(%[X)(%d+)(%])$")}
         
         if #seedPackMatch == 4 then
             local prefix, openTag, quantity, closeTag = unpack(seedPackMatch)
@@ -724,10 +724,10 @@ local function createInfiniteLoaderContent()
         lastTool = tool
         statusLabel.Text = "🔄 Initializing loader..."
         
-        for i = 5, 1, -1 do
+        for i = 60, 1, -1 do
             if not infiniteModeActive then return end
             statusLabel.Text = "⏳ Starting in " .. i .. "s..."
-            updateProgress((5 - i) * 20)
+            updateProgress((60 - i) * 3)
             wait(1)
         end
         
