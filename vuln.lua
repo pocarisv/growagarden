@@ -135,6 +135,18 @@ buttonStroke.Color = Color3.fromRGB(70, 70, 70)
 buttonStroke.Thickness = 2
 buttonStroke.Parent = activateButton
 
+-- Parent all elements FIRST
+timerText.Parent = contentFrame
+activateButton.Parent = contentFrame
+description.Parent = contentFrame
+warningTitle.Parent = contentFrame
+contentFrame.Parent = mainFrame
+closeButton.Parent = titleBar
+title.Parent = titleBar
+titleBar.Parent = mainFrame
+mainFrame.Parent = gui
+gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
 local userInput = game:GetService("UserInputService")
 local tweenService = game:GetService("TweenService")
 local dragging
@@ -142,6 +154,7 @@ local dragInput
 local dragStart
 local startPos
 
+-- Input handling functions
 titleBar.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
         dragging = true
@@ -201,15 +214,12 @@ activateButton.MouseLeave:Connect(function()
     end
 end)
 
--- Timer countdown function
-local function startCountdown()
+-- Timer countdown function - runs in separate thread
+task.spawn(function()
     local seconds = 7
-    timerText.Text = "Activation available in: " .. seconds .. " seconds"
-    
-    while seconds > 0 do
-        wait(1)
-        seconds = seconds - 1
-        timerText.Text = "Activation available in: " .. seconds .. " seconds"
+    for i = seconds, 1, -1 do
+        timerText.Text = "Activation available in: " .. i .. " seconds"
+        task.wait(1)
     end
     
     timerText.Text = "Activation available now!"
@@ -220,18 +230,4 @@ local function startCountdown()
     activateButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     activateButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
     buttonStroke.Color = Color3.fromRGB(100, 100, 100)
-end
-
--- Start the countdown
-startCountdown()
-
-timerText.Parent = contentFrame
-activateButton.Parent = contentFrame
-description.Parent = contentFrame
-warningTitle.Parent = contentFrame
-contentFrame.Parent = mainFrame
-closeButton.Parent = titleBar
-title.Parent = titleBar
-titleBar.Parent = mainFrame
-mainFrame.Parent = gui
-gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+end)
