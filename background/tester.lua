@@ -14,17 +14,33 @@ screenGui.Name = "CustomGUI"
 screenGui.ResetOnSpawn = false
 screenGui.Parent = playerGui
 
+-- Border Frame (Silver background, slightly bigger)
+local borderFrame = Instance.new("Frame")
+borderFrame.Name = "BorderFrame"
+borderFrame.Size = UDim2.new(0, 203, 0, 268) -- 4px bigger on each side (8px total)
+borderFrame.Position = UDim2.new(0.5, -101.5, 0.5, -134)
+borderFrame.BackgroundColor3 = Color3.fromRGB(192, 192, 192) -- Silver background
+borderFrame.BorderSizePixel = 0
+borderFrame.Active = true
+borderFrame.Draggable = true
+borderFrame.Parent = screenGui
+
+-- Corner rounding for border frame
+local borderCorner = Instance.new("UICorner")
+borderCorner.CornerRadius = UDim.new(0, 10) -- Slightly larger radius
+borderCorner.Parent = borderFrame
+
 -- Main Frame (3:4 aspect ratio, 30% bigger than previous)
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
 mainFrame.Size = UDim2.new(0, 195, 0, 260) -- 3:4 ratio, 30% bigger
-mainFrame.Position = UDim2.new(0.5, -97.5, 0.5, -130)
+mainFrame.Position = UDim2.new(0, 4, 0, 4) -- Centered within border frame
 mainFrame.BackgroundColor3 = Color3.fromRGB(64, 64, 64) -- Dark gray
 mainFrame.BorderColor3 = Color3.fromRGB(192, 192, 192) -- Silver
 mainFrame.BorderSizePixel = 3 -- Thicker silver outline
-mainFrame.Active = true
-mainFrame.Draggable = true
-mainFrame.Parent = screenGui
+mainFrame.Active = false -- Disable interaction since border frame handles it
+mainFrame.Draggable = false -- Border frame handles dragging
+mainFrame.Parent = borderFrame -- Parent to border frame instead of screenGui
 
 -- Corner rounding for main frame
 local mainCorner = Instance.new("UICorner")
@@ -190,8 +206,12 @@ local function toggleMinimize()
         -- Minimize - size to fit title bar content
         local titleWidth = titleText.TextBounds.X + 80 -- Add space for buttons and padding
         local minimizedWidth = math.max(titleWidth, 120) -- Minimum width
+        local minimizedBorderWidth = minimizedWidth + 8 -- Add border padding
+        
         local minimizeTween = TweenService:Create(mainFrame, tweenInfo, {Size = UDim2.new(0, minimizedWidth, 0, 30)})
+        local borderTween = TweenService:Create(borderFrame, tweenInfo, {Size = UDim2.new(0, minimizedBorderWidth, 0, 38)})
         minimizeTween:Play()
+        borderTween:Play()
         
         contentFrame.Visible = false
         watermarkFrame.Visible = false
@@ -200,7 +220,9 @@ local function toggleMinimize()
     else
         -- Restore
         local restoreTween = TweenService:Create(mainFrame, tweenInfo, {Size = originalSize})
+        local borderRestoreTween = TweenService:Create(borderFrame, tweenInfo, {Size = UDim2.new(0, 203, 0, 268)})
         restoreTween:Play()
+        borderRestoreTween:Play()
         
         restoreTween.Completed:Connect(function()
             contentFrame.Visible = true
@@ -215,7 +237,7 @@ end
 -- Close functionality
 local function closeGUI()
     local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
-    local closeTween = TweenService:Create(mainFrame, tweenInfo, {
+    local closeTween = TweenService:Create(borderFrame, tweenInfo, {
         Size = UDim2.new(0, 0, 0, 0),
         Position = UDim2.new(0.5, 0, 0.5, 0)
     })
