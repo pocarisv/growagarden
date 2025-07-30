@@ -1,6 +1,5 @@
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
-local UserInputService = game:GetService("UserInputService")
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
@@ -12,8 +11,8 @@ screenGui.Parent = playerGui
 
 local borderFrame = Instance.new("Frame")
 borderFrame.Name = "BorderFrame"
-borderFrame.Size = UDim2.new(0, 500, 0, 400)
-borderFrame.Position = UDim2.new(0.5, -250, 0.5, -200)
+borderFrame.Size = UDim2.new(0, 500, 0, 375)
+borderFrame.Position = UDim2.new(0.5, -250, 0.5, -187.5)
 borderFrame.BackgroundColor3 = Color3.fromRGB(192, 192, 192)
 borderFrame.BorderSizePixel = 0
 borderFrame.Active = true
@@ -26,7 +25,7 @@ borderCorner.Parent = borderFrame
 
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
-mainFrame.Size = UDim2.new(0, 492, 0, 392)
+mainFrame.Size = UDim2.new(0, 492, 0, 367)
 mainFrame.Position = UDim2.new(0, 4, 0, 4)
 mainFrame.BackgroundColor3 = Color3.fromRGB(64, 64, 64)
 mainFrame.BorderColor3 = Color3.fromRGB(192, 192, 192)
@@ -79,36 +78,29 @@ local closeCorner = Instance.new("UICorner")
 closeCorner.CornerRadius = UDim.new(0, 4)
 closeCorner.Parent = closeButton
 
-local contentScroller = Instance.new("ScrollingFrame")
-contentScroller.Name = "ContentScroller"
-contentScroller.Size = UDim2.new(1, -6, 1, -38)
-contentScroller.Position = UDim2.new(0, 3, 0, 32)
-contentScroller.BackgroundTransparency = 1
-contentScroller.ScrollBarThickness = 5
-contentScroller.AutomaticCanvasSize = Enum.AutomaticSize.Y
-contentScroller.CanvasSize = UDim2.new(0, 0, 0, 0)
-contentScroller.Parent = mainFrame
-
-local contentLayout = Instance.new("UIListLayout")
-contentLayout.Padding = UDim.new(0, 15)
-contentLayout.Parent = contentScroller
+local contentFrame = Instance.new("Frame")
+contentFrame.Name = "ContentFrame"
+contentFrame.Size = UDim2.new(1, -10, 1, -40)
+contentFrame.Position = UDim2.new(0, 5, 0, 35)
+contentFrame.BackgroundTransparency = 1
+contentFrame.Parent = mainFrame
 
 local warningLabel = Instance.new("TextLabel")
 warningLabel.Name = "WarningLabel"
-warningLabel.Size = UDim2.new(1, -20, 0, 60)
+warningLabel.Size = UDim2.new(1, 0, 0, 40)
 warningLabel.BackgroundTransparency = 1
 warningLabel.Text = "Whoops! Stop Right There..."
 warningLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
-warningLabel.TextSize = 28
+warningLabel.TextSize = 24
 warningLabel.Font = Enum.Font.FredokaOne
 warningLabel.TextWrapped = true
 warningLabel.TextXAlignment = Enum.TextXAlignment.Center
-warningLabel.Parent = contentScroller
+warningLabel.Parent = contentFrame
 
 local descriptionLabel = Instance.new("TextLabel")
 descriptionLabel.Name = "DescriptionLabel"
-descriptionLabel.Size = UDim2.new(1, -20, 0, 0)
-descriptionLabel.AutomaticSize = Enum.AutomaticSize.Y
+descriptionLabel.Size = UDim2.new(1, -10, 0, 150)
+descriptionLabel.Position = UDim2.new(0, 5, 0, 45)
 descriptionLabel.BackgroundTransparency = 1
 descriptionLabel.Text = "Before you access the exploits for Grow a Garden, I want you to understand several things. This script is server sensitive and might do a server restart suddenly, its to keep your account safe from light bans (ex. Gifting Failed or Data Loss). Therefore it is implemented to prevent your account to experience such things, if a server restart happens please refrain from doing anything and wait until it was all completed it will only take a minute or two depends on your internet connection. If that is all well understood, check the box below this message and proceed to press the Activate button right after."
 descriptionLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
@@ -116,13 +108,14 @@ descriptionLabel.TextSize = 16
 descriptionLabel.Font = Enum.Font.GothamSemibold
 descriptionLabel.TextWrapped = true
 descriptionLabel.TextXAlignment = Enum.TextXAlignment.Justify
-descriptionLabel.Parent = contentScroller
+descriptionLabel.Parent = contentFrame
 
 local checkboxFrame = Instance.new("Frame")
 checkboxFrame.Name = "CheckboxFrame"
 checkboxFrame.Size = UDim2.new(1, -20, 0, 30)
+checkboxFrame.Position = UDim2.new(0, 10, 0, 205)
 checkboxFrame.BackgroundTransparency = 1
-checkboxFrame.Parent = contentScroller
+checkboxFrame.Parent = contentFrame
 
 local checkbox = Instance.new("TextButton")
 checkbox.Name = "Checkbox"
@@ -161,15 +154,15 @@ checkboxLabel.Parent = checkboxFrame
 local activateButton = Instance.new("TextButton")
 activateButton.Name = "ActivateButton"
 activateButton.Size = UDim2.new(0.6, 0, 0, 45)
-activateButton.Position = UDim2.new(0.2, 0, 0, 10)
-activateButton.BackgroundColor3 = Color3.fromRGB(60, 150, 60)
+activateButton.Position = UDim2.new(0.2, 0, 0, 250)
+activateButton.BackgroundColor3 = Color3.fromRGB(40, 90, 40)
 activateButton.Text = "Activate"
 activateButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 activateButton.TextSize = 20
 activateButton.Font = Enum.Font.FredokaOne
 activateButton.AutoButtonColor = false
 activateButton.Active = false
-activateButton.Parent = contentScroller
+activateButton.Parent = contentFrame
 
 local buttonCorner = Instance.new("UICorner")
 buttonCorner.CornerRadius = UDim.new(0, 6)
@@ -177,12 +170,16 @@ buttonCorner.Parent = activateButton
 
 local function createHoverEffect(button, hoverColor, normalColor)
     button.MouseEnter:Connect(function()
-        local hoverTween = TweenService:Create(button, TweenInfo.new(0.2), {BackgroundColor3 = hoverColor})
-        hoverTween:Play()
+        if button.Active then
+            local hoverTween = TweenService:Create(button, TweenInfo.new(0.2), {BackgroundColor3 = hoverColor})
+            hoverTween:Play()
+        end
     end)
     button.MouseLeave:Connect(function()
-        local leaveTween = TweenService:Create(button, TweenInfo.new(0.2), {BackgroundColor3 = normalColor})
-        leaveTween:Play()
+        if button.Active then
+            local leaveTween = TweenService:Create(button, TweenInfo.new(0.2), {BackgroundColor3 = normalColor})
+            leaveTween:Play()
+        end
     end)
 end
 
