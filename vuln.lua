@@ -77,6 +77,10 @@ padding.PaddingLeft = UDim.new(0, 4)
 padding.PaddingRight = UDim.new(0, 4)
 padding.PaddingTop = UDim.new(0, 4)
 
+layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    contentFrame.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 20)
+end)
+
 local warningTitle = Instance.new("TextLabel")
 warningTitle.Name = "WarningTitle"
 warningTitle.Text = "Whoops! Stop Right There.."
@@ -145,7 +149,6 @@ local buttonContainer = Instance.new("Frame")
 buttonContainer.Name = "ButtonContainer"
 buttonContainer.BackgroundTransparency = 1
 buttonContainer.Size = UDim2.new(1, 0, 0, 50)
-buttonContainer.LayoutOrder = 4
 buttonContainer.Position = UDim2.new(0, 0, 1, -60)
 
 local activateButton = Instance.new("TextButton")
@@ -244,13 +247,13 @@ checkmark.Parent = checkbox
 checkbox.Parent = checkFrame
 checkText.Parent = checkFrame
 checkFrame.Parent = contentFrame
-activateButton.Parent = buttonContainer
-buttonContainer.Parent = mainFrame
 description.Parent = contentFrame
 warningTitle.Parent = contentFrame
 contentFrame.Parent = mainFrame
 closeButton.Parent = titleBar
 title.Parent = titleBar
 titleBar.Parent = mainFrame
+activateButton.Parent = buttonContainer
+buttonContainer.Parent = mainFrame
 mainFrame.Parent = gui
 gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
