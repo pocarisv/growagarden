@@ -70,7 +70,7 @@ titleText.BackgroundTransparency = 1
 titleText.Text = "Custom GUI"
 titleText.TextColor3 = Color3.fromRGB(255, 255, 255)
 titleText.TextSize = 14 -- Modern appropriate font size
-titleText.Font = Enum.Font.GothamMedium -- Gotham rounded alternative
+titleText.Font = Enum.Font.FredokaOne -- FredokaOne font
 titleText.TextXAlignment = Enum.TextXAlignment.Left
 titleText.Parent = titleBar
 
@@ -84,7 +84,7 @@ minimizeButton.BorderSizePixel = 0 -- Remove default border since we're using UI
 minimizeButton.Text = "−"
 minimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 minimizeButton.TextSize = 16 -- Modern appropriate font size
-minimizeButton.Font = Enum.Font.GothamMedium -- Gotham rounded alternative
+minimizeButton.Font = Enum.Font.FredokaOne -- FredokaOne font
 minimizeButton.Parent = titleBar
 
 local minimizeCorner = Instance.new("UICorner")
@@ -101,7 +101,7 @@ closeButton.BorderSizePixel = 0 -- Remove default border since we're using UIStr
 closeButton.Text = "×"
 closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 closeButton.TextSize = 16 -- Modern appropriate font size
-closeButton.Font = Enum.Font.GothamMedium -- Gotham rounded alternative
+closeButton.Font = Enum.Font.FredokaOne -- FredokaOne font
 closeButton.Parent = titleBar
 
 local closeCorner = Instance.new("UICorner")
@@ -126,7 +126,7 @@ contentText.BackgroundTransparency = 1
 contentText.Text = "Your GUI content goes here!\n\nThis is a 3:4 aspect ratio GUI with dark gray theme and silver outlines."
 contentText.TextColor3 = Color3.fromRGB(220, 220, 220)
 contentText.TextSize = 12 -- Modern appropriate font size for bigger GUI
-contentText.Font = Enum.Font.Nunito -- Nunito font
+contentText.Font = Enum.Font.SourceSans -- Closest to Nunito in Roblox
 contentText.TextWrapped = true
 contentText.Parent = contentFrame
 
