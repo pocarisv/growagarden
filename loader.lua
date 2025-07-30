@@ -1,6 +1,3 @@
--- 4:3 Activation GUI Script
--- Made by jayzee
-
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
@@ -8,14 +5,11 @@ local RunService = game:GetService("RunService")
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
-
--- Create ScreenGui
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "ActivationGUI"
 screenGui.ResetOnSpawn = false
 screenGui.Parent = playerGui
 
--- Border Frame (Silver background, slightly bigger)
 local borderFrame = Instance.new("Frame")
 borderFrame.Name = "BorderFrame"
 borderFrame.Size = UDim2.new(0, 203, 0, 268)
@@ -26,12 +20,10 @@ borderFrame.Active = true
 borderFrame.Draggable = true
 borderFrame.Parent = screenGui
 
--- Corner rounding for border frame
 local borderCorner = Instance.new("UICorner")
 borderCorner.CornerRadius = UDim.new(0, 10)
 borderCorner.Parent = borderFrame
 
--- Main Frame
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
 mainFrame.Size = UDim2.new(0, 195, 0, 260)
@@ -43,12 +35,10 @@ mainFrame.Active = false
 mainFrame.Draggable = false
 mainFrame.Parent = borderFrame
 
--- Corner rounding for main frame
 local mainCorner = Instance.new("UICorner")
 mainCorner.CornerRadius = UDim.new(0, 8)
 mainCorner.Parent = mainFrame
 
--- Title Bar
 local titleBar = Instance.new("Frame")
 titleBar.Name = "TitleBar"
 titleBar.Size = UDim2.new(1, 0, 0, 30)
@@ -57,12 +47,10 @@ titleBar.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
 titleBar.BorderSizePixel = 0
 titleBar.Parent = mainFrame
 
--- Corner rounding for title bar
 local titleCorner = Instance.new("UICorner")
 titleCorner.CornerRadius = UDim.new(0, 8)
 titleCorner.Parent = titleBar
 
--- Title Text
 local titleText = Instance.new("TextLabel")
 titleText.Name = "TitleText"
 titleText.Size = UDim2.new(1, -60, 1, 0)
@@ -75,7 +63,6 @@ titleText.Font = Enum.Font.FredokaOne
 titleText.TextXAlignment = Enum.TextXAlignment.Left
 titleText.Parent = titleBar
 
--- Minimize Button
 local minimizeButton = Instance.new("TextButton")
 minimizeButton.Name = "MinimizeButton"
 minimizeButton.Size = UDim2.new(0, 20, 0, 20)
@@ -92,7 +79,6 @@ local minimizeCorner = Instance.new("UICorner")
 minimizeCorner.CornerRadius = UDim.new(0, 4)
 minimizeCorner.Parent = minimizeButton
 
--- Close Button
 local closeButton = Instance.new("TextButton")
 closeButton.Name = "CloseButton"
 closeButton.Size = UDim2.new(0, 20, 0, 20)
@@ -109,7 +95,6 @@ local closeCorner = Instance.new("UICorner")
 closeCorner.CornerRadius = UDim.new(0, 4)
 closeCorner.Parent = closeButton
 
--- Content Area (ScrollingFrame)
 local contentFrame = Instance.new("ScrollingFrame")
 contentFrame.Name = "ContentFrame"
 contentFrame.Size = UDim2.new(1, -6, 1, -54)
@@ -119,9 +104,9 @@ contentFrame.BorderSizePixel = 0
 contentFrame.ScrollBarThickness = 6
 contentFrame.ScrollBarImageColor3 = Color3.fromRGB(150, 150, 150)
 contentFrame.CanvasSize = UDim2.new(0, 0, 0, 240)
+contentFrame.ScrollingDirection = Enum.ScrollingDirection.Y
 contentFrame.Parent = mainFrame
 
--- Warning Text
 local warningText = Instance.new("TextLabel")
 warningText.Name = "WarningText"
 warningText.Size = UDim2.new(1, -10, 0, 60)
@@ -135,7 +120,6 @@ warningText.TextWrapped = true
 warningText.TextScaled = true
 warningText.Parent = contentFrame
 
--- Agreement Text
 local agreementText = Instance.new("TextLabel")
 agreementText.Name = "AgreementText"
 agreementText.Size = UDim2.new(1, -10, 0, 130)
@@ -149,11 +133,10 @@ agreementText.TextWrapped = true
 agreementText.TextXAlignment = Enum.TextXAlignment.Left
 agreementText.Parent = contentFrame
 
--- Activate Button
 local activateButton = Instance.new("TextButton")
 activateButton.Name = "ActivateButton"
 activateButton.Size = UDim2.new(0.8, 0, 0, 30)
-activateButton.Position = UDim2.new(0.1, 0, 0, 205)
+activateButton.Position = UDim2.new(0.1, 0, 0, 210)
 activateButton.BackgroundColor3 = Color3.fromRGB(80, 180, 80)
 activateButton.Text = "ACTIVATE"
 activateButton.TextColor3 = Color3.new(1, 1, 1)
@@ -165,7 +148,6 @@ local activateCorner = Instance.new("UICorner")
 activateCorner.CornerRadius = UDim.new(0, 5)
 activateCorner.Parent = activateButton
 
--- Watermark Section
 local watermarkFrame = Instance.new("Frame")
 watermarkFrame.Name = "WatermarkFrame"
 watermarkFrame.Size = UDim2.new(1, 0, 0, 20)
@@ -178,7 +160,6 @@ local watermarkCorner = Instance.new("UICorner")
 watermarkCorner.CornerRadius = UDim.new(0, 8)
 watermarkCorner.Parent = watermarkFrame
 
--- Watermark Text
 local watermarkText = Instance.new("TextLabel")
 watermarkText.Name = "WatermarkText"
 watermarkText.Size = UDim2.new(1, -8, 1, 0)
@@ -191,12 +172,10 @@ watermarkText.Font = Enum.Font.Nunito
 watermarkText.TextXAlignment = Enum.TextXAlignment.Center
 watermarkText.Parent = watermarkFrame
 
--- Variables for minimize functionality
 local isMinimized = false
 local originalSize = mainFrame.Size
 local originalContentVisible = true
 
--- Minimize functionality
 local function toggleMinimize()
     local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
     
@@ -230,7 +209,6 @@ local function toggleMinimize()
     end
 end
 
--- Close functionality
 local function closeGUI()
     local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
     local closeTween = TweenService:Create(borderFrame, tweenInfo, {
@@ -244,7 +222,6 @@ local function closeGUI()
     end)
 end
 
--- Button hover effects
 local function createHoverEffect(button, hoverColor, normalColor)
     button.MouseEnter:Connect(function()
         local hoverTween = TweenService:Create(button, TweenInfo.new(0.2), {BackgroundColor3 = hoverColor})
@@ -257,18 +234,14 @@ local function createHoverEffect(button, hoverColor, normalColor)
     end)
 end
 
--- Apply hover effects
 createHoverEffect(minimizeButton, Color3.fromRGB(100, 100, 100), Color3.fromRGB(80, 80, 80))
 createHoverEffect(closeButton, Color3.fromRGB(200, 80, 80), Color3.fromRGB(180, 60, 60))
 createHoverEffect(activateButton, Color3.fromRGB(100, 220, 100), Color3.fromRGB(80, 180, 80))
 
--- Connect button events
 minimizeButton.MouseButton1Click:Connect(toggleMinimize)
 closeButton.MouseButton1Click:Connect(closeGUI)
 
--- Activation function
 local function activateScript()
-    -- Simulate server restart
     activateButton.Text = "ACTIVATING..."
     activateButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
     
@@ -277,23 +250,16 @@ local function activateScript()
     })
     pulseTween:Play()
     
-    -- Simulate server restart delay
     wait(2)
     
     pulseTween:Cancel()
     closeGUI()
-    
-    -- Your script initialization would go here
-    print("Script activated successfully!")
 end
 
 activateButton.MouseButton1Click:Connect(activateScript)
 
--- Prevent watermark from being modified
 watermarkText.Changed:Connect(function(property)
     if property == "Text" and watermarkText.Text ~= "made by jayzee" then
         watermarkText.Text = "made by jayzee"
     end
 end)
-
-print("Activation GUI loaded successfully!")
