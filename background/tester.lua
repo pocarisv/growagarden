@@ -14,14 +14,14 @@ screenGui.Name = "CustomGUI"
 screenGui.ResetOnSpawn = false
 screenGui.Parent = playerGui
 
--- Main Frame (4:3 aspect ratio)
+-- Main Frame (3:4 aspect ratio, 50% smaller)
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
-mainFrame.Size = UDim2.new(0, 400, 0, 300) -- 4:3 ratio
-mainFrame.Position = UDim2.new(0.5, -200, 0.5, -150)
+mainFrame.Size = UDim2.new(0, 150, 0, 200) -- 3:4 ratio, 50% smaller
+mainFrame.Position = UDim2.new(0.5, -75, 0.5, -100)
 mainFrame.BackgroundColor3 = Color3.fromRGB(64, 64, 64) -- Dark gray
 mainFrame.BorderColor3 = Color3.fromRGB(192, 192, 192) -- Silver
-mainFrame.BorderSizePixel = 2
+mainFrame.BorderSizePixel = 3 -- Thicker silver outline
 mainFrame.Active = true
 mainFrame.Draggable = true
 mainFrame.Parent = screenGui
@@ -38,7 +38,7 @@ titleBar.Size = UDim2.new(1, 0, 0, 30)
 titleBar.Position = UDim2.new(0, 0, 0, 0)
 titleBar.BackgroundColor3 = Color3.fromRGB(48, 48, 48) -- Darker gray for title
 titleBar.BorderColor3 = Color3.fromRGB(192, 192, 192) -- Silver
-titleBar.BorderSizePixel = 1
+titleBar.BorderSizePixel = 2 -- Thicker silver outline
 titleBar.Parent = mainFrame
 
 -- Corner rounding for title bar
@@ -49,12 +49,12 @@ titleCorner.Parent = titleBar
 -- Title Text
 local titleText = Instance.new("TextLabel")
 titleText.Name = "TitleText"
-titleText.Size = UDim2.new(1, -80, 1, 0)
-titleText.Position = UDim2.new(0, 10, 0, 0)
+titleText.Size = UDim2.new(1, -60, 1, 0) -- Adjusted for smaller GUI
+titleText.Position = UDim2.new(0, 8, 0, 0)
 titleText.BackgroundTransparency = 1
 titleText.Text = "Custom GUI"
 titleText.TextColor3 = Color3.fromRGB(255, 255, 255)
-titleText.TextScaled = true
+titleText.TextSize = 12 -- Modern appropriate font size
 titleText.Font = Enum.Font.GothamBold
 titleText.TextXAlignment = Enum.TextXAlignment.Left
 titleText.Parent = titleBar
@@ -62,14 +62,14 @@ titleText.Parent = titleBar
 -- Minimize Button
 local minimizeButton = Instance.new("TextButton")
 minimizeButton.Name = "MinimizeButton"
-minimizeButton.Size = UDim2.new(0, 25, 0, 25)
-minimizeButton.Position = UDim2.new(1, -60, 0, 2.5)
+minimizeButton.Size = UDim2.new(0, 20, 0, 20) -- Smaller for compact GUI
+minimizeButton.Position = UDim2.new(1, -45, 0, 5)
 minimizeButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
 minimizeButton.BorderColor3 = Color3.fromRGB(192, 192, 192)
-minimizeButton.BorderSizePixel = 1
+minimizeButton.BorderSizePixel = 2 -- Silver outline
 minimizeButton.Text = "−"
 minimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-minimizeButton.TextScaled = true
+minimizeButton.TextSize = 14 -- Modern appropriate font size
 minimizeButton.Font = Enum.Font.GothamBold
 minimizeButton.Parent = titleBar
 
@@ -80,14 +80,14 @@ minimizeCorner.Parent = minimizeButton
 -- Close Button
 local closeButton = Instance.new("TextButton")
 closeButton.Name = "CloseButton"
-closeButton.Size = UDim2.new(0, 25, 0, 25)
-closeButton.Position = UDim2.new(1, -30, 0, 2.5)
+closeButton.Size = UDim2.new(0, 20, 0, 20) -- Smaller for compact GUI
+closeButton.Position = UDim2.new(1, -22, 0, 5)
 closeButton.BackgroundColor3 = Color3.fromRGB(180, 60, 60)
 closeButton.BorderColor3 = Color3.fromRGB(192, 192, 192)
-closeButton.BorderSizePixel = 1
+closeButton.BorderSizePixel = 2 -- Silver outline
 closeButton.Text = "×"
 closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-closeButton.TextScaled = true
+closeButton.TextSize = 14 -- Modern appropriate font size
 closeButton.Font = Enum.Font.GothamBold
 closeButton.Parent = titleBar
 
@@ -98,10 +98,11 @@ closeCorner.Parent = closeButton
 -- Content Area
 local contentFrame = Instance.new("Frame")
 contentFrame.Name = "ContentFrame"
-contentFrame.Size = UDim2.new(1, -4, 1, -54) -- Leave space for title and watermark
-contentFrame.Position = UDim2.new(0, 2, 0, 32)
+contentFrame.Size = UDim2.new(1, -6, 1, -54) -- Adjusted for thicker borders
+contentFrame.Position = UDim2.new(0, 3, 0, 32)
 contentFrame.BackgroundColor3 = Color3.fromRGB(64, 64, 64)
-contentFrame.BorderSizePixel = 0
+contentFrame.BorderColor3 = Color3.fromRGB(192, 192, 192)
+contentFrame.BorderSizePixel = 1 -- Subtle silver outline
 contentFrame.Parent = mainFrame
 
 -- Sample content
