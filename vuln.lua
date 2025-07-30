@@ -16,7 +16,7 @@ mainCorner.Parent = mainFrame
 
 local mainBorder = Instance.new("UIStroke")
 mainBorder.Color = Color3.fromRGB(230, 230, 230)
-mainBorder.Thickness = 3)
+mainBorder.Thickness = 3
 mainBorder.Parent = mainFrame
 
 local titleBar = Instance.new("Frame")
