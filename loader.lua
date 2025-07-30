@@ -48,19 +48,11 @@ local mainCorner = Instance.new("UICorner")
 mainCorner.CornerRadius = UDim.new(0, 8)
 mainCorner.Parent = mainFrame
 
--- Add padding to main frame for better text spacing
-local mainPadding = Instance.new("UIPadding")
-mainPadding.PaddingLeft = UDim.new(0, 8)
-mainPadding.PaddingRight = UDim.new(0, 8)
-mainPadding.PaddingTop = UDim.new(0, 5)
-mainPadding.PaddingBottom = UDim.new(0, 5)
-mainPadding.Parent = mainFrame
-
 -- Title Bar
 local titleBar = Instance.new("Frame")
 titleBar.Name = "TitleBar"
-titleBar.Size = UDim2.new(1, -16, 0, 30)
-titleBar.Position = UDim2.new(0, 8, 0, 5)
+titleBar.Size = UDim2.new(1, 0, 0, 30)
+titleBar.Position = UDim2.new(0, 0, 0, 0)
 titleBar.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
 titleBar.BorderSizePixel = 0
 titleBar.Parent = mainFrame
@@ -81,7 +73,6 @@ titleText.TextColor3 = Color3.fromRGB(255, 255, 255)
 titleText.TextSize = 14
 titleText.Font = Enum.Font.FredokaOne
 titleText.TextXAlignment = Enum.TextXAlignment.Left
-titleText.TextYAlignment = Enum.TextYAlignment.Center
 titleText.Parent = titleBar
 
 -- Minimize Button
@@ -118,58 +109,51 @@ local closeCorner = Instance.new("UICorner")
 closeCorner.CornerRadius = UDim.new(0, 4)
 closeCorner.Parent = closeButton
 
--- Content Area
-local contentFrame = Instance.new("Frame")
+-- Content Area (ScrollingFrame)
+local contentFrame = Instance.new("ScrollingFrame")
 contentFrame.Name = "ContentFrame"
-contentFrame.Size = UDim2.new(1, -16, 1, -60)
-contentFrame.Position = UDim2.new(0, 8, 0, 40)
+contentFrame.Size = UDim2.new(1, -6, 1, -54)
+contentFrame.Position = UDim2.new(0, 3, 0, 32)
 contentFrame.BackgroundColor3 = Color3.fromRGB(64, 64, 64)
 contentFrame.BorderSizePixel = 0
+contentFrame.ScrollBarThickness = 6
+contentFrame.ScrollBarImageColor3 = Color3.fromRGB(150, 150, 150)
+contentFrame.CanvasSize = UDim2.new(0, 0, 0, 240)
 contentFrame.Parent = mainFrame
-
--- Add padding to content frame
-local contentPadding = Instance.new("UIPadding")
-contentPadding.PaddingLeft = UDim.new(0, 10)
-contentPadding.PaddingRight = UDim.new(0, 10)
-contentPadding.PaddingTop = UDim.new(0, 8)
-contentPadding.PaddingBottom = UDim.new(0, 8)
-contentPadding.Parent = contentFrame
 
 -- Warning Text
 local warningText = Instance.new("TextLabel")
 warningText.Name = "WarningText"
-warningText.Size = UDim2.new(1, 0, 0, 35)
-warningText.Position = UDim2.new(0, 0, 0, 0)
+warningText.Size = UDim2.new(1, -10, 0, 60)
+warningText.Position = UDim2.new(0, 5, 0, 5)
 warningText.BackgroundTransparency = 1
 warningText.Text = "Whoops! Stop Right There!"
 warningText.TextColor3 = Color3.fromRGB(255, 100, 100)
-warningText.TextSize = 16
+warningText.TextSize = 18
 warningText.Font = Enum.Font.FredokaOne
 warningText.TextWrapped = true
-warningText.TextXAlignment = Enum.TextXAlignment.Center
-warningText.TextYAlignment = Enum.TextYAlignment.Center
+warningText.TextScaled = true
 warningText.Parent = contentFrame
 
 -- Agreement Text
 local agreementText = Instance.new("TextLabel")
 agreementText.Name = "AgreementText"
-agreementText.Size = UDim2.new(1, 0, 0, 120)
-agreementText.Position = UDim2.new(0, 0, 0, 45)
+agreementText.Size = UDim2.new(1, -10, 0, 130)
+agreementText.Position = UDim2.new(0, 5, 0, 70)
 agreementText.BackgroundTransparency = 1
-agreementText.Text = "Before accessing the script, we need your confirmation. This script may perform a server restart if communication issues occur with the game server to prevent potential bans.\n\nFor your safety, we require your agreement. If a server restart happens, please remain in-game and avoid any actions during the process. The developer cannot predict what might happen if you leave or exit during this time.\n\nBy clicking 'ACTIVATE' below, you agree to these terms and the script will initialize with a server restart. Have fun and good luck!"
+agreementText.Text = "Before you have access the script can we confirm your agreement towards us? Good! This script may do a Server Restart if it encounter a trouble while communicating with the game server! (It is to avoid bans) Therefore we will need your confirmation in order for you to have a safer environment :). If a Server Restart occur please refrain from doing anything, I, the Developer itself doesn't know what will happen if you leave, quit, exit the game, etc. so please I ask for your cooperation. If you agree, just press the Activate Button below and it will do a Server Restart to initialize the script into your executor. Have Fun and Goodluck ;)"
 agreementText.TextColor3 = Color3.fromRGB(220, 220, 220)
-agreementText.TextSize = 11
+agreementText.TextSize = 12
 agreementText.Font = Enum.Font.SourceSans
 agreementText.TextWrapped = true
 agreementText.TextXAlignment = Enum.TextXAlignment.Left
-agreementText.TextYAlignment = Enum.TextYAlignment.Top
 agreementText.Parent = contentFrame
 
 -- Activate Button
 local activateButton = Instance.new("TextButton")
 activateButton.Name = "ActivateButton"
-activateButton.Size = UDim2.new(0.8, 0, 0, 32)
-activateButton.Position = UDim2.new(0.1, 0, 1, -40)
+activateButton.Size = UDim2.new(0.8, 0, 0, 30)
+activateButton.Position = UDim2.new(0.1, 0, 0, 205)
 activateButton.BackgroundColor3 = Color3.fromRGB(80, 180, 80)
 activateButton.Text = "ACTIVATE"
 activateButton.TextColor3 = Color3.new(1, 1, 1)
@@ -178,14 +162,14 @@ activateButton.Font = Enum.Font.FredokaOne
 activateButton.Parent = contentFrame
 
 local activateCorner = Instance.new("UICorner")
-activateCorner.CornerRadius = UDim.new(0, 6)
+activateCorner.CornerRadius = UDim.new(0, 5)
 activateCorner.Parent = activateButton
 
 -- Watermark Section
 local watermarkFrame = Instance.new("Frame")
 watermarkFrame.Name = "WatermarkFrame"
-watermarkFrame.Size = UDim2.new(1, -16, 0, 20)
-watermarkFrame.Position = UDim2.new(0, 8, 1, -25)
+watermarkFrame.Size = UDim2.new(1, 0, 0, 20)
+watermarkFrame.Position = UDim2.new(0, 0, 1, -20)
 watermarkFrame.BackgroundColor3 = Color3.fromRGB(64, 64, 64)
 watermarkFrame.BorderSizePixel = 0
 watermarkFrame.Parent = mainFrame
@@ -205,7 +189,6 @@ watermarkText.TextColor3 = Color3.fromRGB(160, 160, 160)
 watermarkText.TextSize = 10
 watermarkText.Font = Enum.Font.Nunito
 watermarkText.TextXAlignment = Enum.TextXAlignment.Center
-watermarkText.TextYAlignment = Enum.TextYAlignment.Center
 watermarkText.Parent = watermarkFrame
 
 -- Variables for minimize functionality
@@ -222,8 +205,8 @@ local function toggleMinimize()
         local minimizedWidth = math.max(titleWidth, 120)
         local minimizedBorderWidth = minimizedWidth + 8
         
-        local minimizeTween = TweenService:Create(mainFrame, tweenInfo, {Size = UDim2.new(0, minimizedWidth, 0, 40)})
-        local borderTween = TweenService:Create(borderFrame, tweenInfo, {Size = UDim2.new(0, minimizedBorderWidth, 0, 48)})
+        local minimizeTween = TweenService:Create(mainFrame, tweenInfo, {Size = UDim2.new(0, minimizedWidth, 0, 30)})
+        local borderTween = TweenService:Create(borderFrame, tweenInfo, {Size = UDim2.new(0, minimizedBorderWidth, 0, 38)})
         minimizeTween:Play()
         borderTween:Play()
         
