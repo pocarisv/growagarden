@@ -97,7 +97,7 @@ description.TextColor3 = Color3.fromRGB(220, 220, 220)
 description.BackgroundTransparency = 1
 description.Size = UDim2.new(1, 0, 0, 0)
 description.TextWrapped = true
-description.TextXAlignment = Enum.TextXAlignment.Left
+description.TextXAlignment = Enum.TextXAlignment.Justify
 description.AutomaticSize = Enum.AutomaticSize.Y
 description.LayoutOrder = 2
 
@@ -141,11 +141,13 @@ activateButton.Name = "ActivateButton"
 activateButton.Text = "ACTIVATE"
 activateButton.Font = Enum.Font.FredokaOne
 activateButton.TextSize = 18
-activateButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-activateButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+activateButton.TextColor3 = Color3.fromRGB(150, 150, 150)
+activateButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 activateButton.Size = UDim2.new(0.8, 0, 0, 40)
-activateButton.Position = UDim2.new(0.1, 0, 0, 0)
+activateButton.Position = UDim2.new(0.5, 0, 0, 0)
+activateButton.AnchorPoint = Vector2.new(0.5, 0)
 activateButton.AutoButtonColor = false
+activateButton.Active = false
 activateButton.LayoutOrder = 4
 
 local buttonCorner = Instance.new("UICorner")
@@ -153,7 +155,7 @@ buttonCorner.CornerRadius = UDim.new(0, 6)
 buttonCorner.Parent = activateButton
 
 local buttonStroke = Instance.new("UIStroke")
-buttonStroke.Color = Color3.fromRGB(100, 100, 100)
+buttonStroke.Color = Color3.fromRGB(70, 70, 70)
 buttonStroke.Thickness = 2
 buttonStroke.Parent = activateButton
 
@@ -211,14 +213,31 @@ pulseTween:Play()
 
 checkbox.MouseButton1Click:Connect(function()
     checkmark.Visible = not checkmark.Visible
+    activateButton.Active = checkmark.Visible
+    
+    if checkmark.Visible then
+        activateButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        activateButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        buttonStroke.Color = Color3.fromRGB(100, 100, 100)
+    else
+        activateButton.TextColor3 = Color3.fromRGB(150, 150, 150)
+        activateButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+        buttonStroke.Color = Color3.fromRGB(70, 70, 70)
+    end
 end)
 
 activateButton.MouseEnter:Connect(function()
-    activateButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+    if activateButton.Active then
+        activateButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+    end
 end)
 
 activateButton.MouseLeave:Connect(function()
-    activateButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    if activateButton.Active then
+        activateButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    else
+        activateButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    end
 end)
 
 checkmark.Parent = checkbox
