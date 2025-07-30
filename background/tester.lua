@@ -14,11 +14,11 @@ screenGui.Name = "CustomGUI"
 screenGui.ResetOnSpawn = false
 screenGui.Parent = playerGui
 
--- Main Frame (3:4 aspect ratio, 50% smaller)
+-- Main Frame (3:4 aspect ratio, 30% bigger than previous)
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
-mainFrame.Size = UDim2.new(0, 150, 0, 200) -- 3:4 ratio, 50% smaller
-mainFrame.Position = UDim2.new(0.5, -75, 0.5, -100)
+mainFrame.Size = UDim2.new(0, 195, 0, 260) -- 3:4 ratio, 30% bigger
+mainFrame.Position = UDim2.new(0.5, -97.5, 0.5, -130)
 mainFrame.BackgroundColor3 = Color3.fromRGB(64, 64, 64) -- Dark gray
 mainFrame.BorderColor3 = Color3.fromRGB(192, 192, 192) -- Silver
 mainFrame.BorderSizePixel = 3 -- Thicker silver outline
@@ -54,8 +54,8 @@ titleText.Position = UDim2.new(0, 8, 0, 0)
 titleText.BackgroundTransparency = 1
 titleText.Text = "Custom GUI"
 titleText.TextColor3 = Color3.fromRGB(255, 255, 255)
-titleText.TextSize = 12 -- Modern appropriate font size
-titleText.Font = Enum.Font.GothamBold
+titleText.TextSize = 14 -- Modern appropriate font size
+titleText.Font = Enum.Font.SourceSansLight -- Closest to Visby rounded
 titleText.TextXAlignment = Enum.TextXAlignment.Left
 titleText.Parent = titleBar
 
@@ -69,8 +69,8 @@ minimizeButton.BorderColor3 = Color3.fromRGB(192, 192, 192)
 minimizeButton.BorderSizePixel = 2 -- Silver outline
 minimizeButton.Text = "−"
 minimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-minimizeButton.TextSize = 14 -- Modern appropriate font size
-minimizeButton.Font = Enum.Font.GothamBold
+minimizeButton.TextSize = 16 -- Modern appropriate font size
+minimizeButton.Font = Enum.Font.SourceSansLight -- Closest to Visby rounded
 minimizeButton.Parent = titleBar
 
 local minimizeCorner = Instance.new("UICorner")
@@ -87,8 +87,8 @@ closeButton.BorderColor3 = Color3.fromRGB(192, 192, 192)
 closeButton.BorderSizePixel = 2 -- Silver outline
 closeButton.Text = "×"
 closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-closeButton.TextSize = 14 -- Modern appropriate font size
-closeButton.Font = Enum.Font.GothamBold
+closeButton.TextSize = 16 -- Modern appropriate font size
+closeButton.Font = Enum.Font.SourceSansLight -- Closest to Visby rounded
 closeButton.Parent = titleBar
 
 local closeCorner = Instance.new("UICorner")
@@ -108,13 +108,13 @@ contentFrame.Parent = mainFrame
 -- Sample content
 local contentText = Instance.new("TextLabel")
 contentText.Name = "ContentText"
-contentText.Size = UDim2.new(1, -20, 1, -20)
-contentText.Position = UDim2.new(0, 10, 0, 10)
+contentText.Size = UDim2.new(1, -16, 1, -16) -- Adjusted padding for smaller GUI
+contentText.Position = UDim2.new(0, 8, 0, 8)
 contentText.BackgroundTransparency = 1
-contentText.Text = "Your GUI content goes here!\n\nThis is a 4:3 aspect ratio GUI with dark gray theme and silver outlines."
+contentText.Text = "Your GUI content goes here!\n\nThis is a 3:4 aspect ratio GUI with dark gray theme and silver outlines."
 contentText.TextColor3 = Color3.fromRGB(220, 220, 220)
-contentText.TextScaled = true
-contentText.Font = Enum.Font.Gotham
+contentText.TextSize = 12 -- Modern appropriate font size for bigger GUI
+contentText.Font = Enum.Font.SourceSansLight -- Closest to Visby rounded
 contentText.TextWrapped = true
 contentText.Parent = contentFrame
 
@@ -125,7 +125,7 @@ watermarkFrame.Size = UDim2.new(1, 0, 0, 20)
 watermarkFrame.Position = UDim2.new(0, 0, 1, -20)
 watermarkFrame.BackgroundColor3 = Color3.fromRGB(64, 64, 64) -- Same as main frame
 watermarkFrame.BorderColor3 = Color3.fromRGB(192, 192, 192)
-watermarkFrame.BorderSizePixel = 1
+watermarkFrame.BorderSizePixel = 2 -- Thicker silver outline
 watermarkFrame.Parent = mainFrame
 
 -- Watermark corner rounding
@@ -136,13 +136,13 @@ watermarkCorner.Parent = watermarkFrame
 -- Watermark Text
 local watermarkText = Instance.new("TextLabel")
 watermarkText.Name = "WatermarkText"
-watermarkText.Size = UDim2.new(1, -10, 1, 0)
-watermarkText.Position = UDim2.new(0, 5, 0, 0)
+watermarkText.Size = UDim2.new(1, -8, 1, 0) -- Adjusted for smaller GUI
+watermarkText.Position = UDim2.new(0, 4, 0, 0)
 watermarkText.BackgroundTransparency = 1
 watermarkText.Text = "made by jayzee"
 watermarkText.TextColor3 = Color3.fromRGB(160, 160, 160)
-watermarkText.TextScaled = true
-watermarkText.Font = Enum.Font.Gotham
+watermarkText.TextSize = 10 -- Modern appropriate font size for watermark
+watermarkText.Font = Enum.Font.SourceSansLight -- Closest to Visby rounded
 watermarkText.TextXAlignment = Enum.TextXAlignment.Center
 watermarkText.Parent = watermarkFrame
 
@@ -156,13 +156,15 @@ local function toggleMinimize()
     local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
     
     if not isMinimized then
-        -- Minimize
-        local minimizeTween = TweenService:Create(mainFrame, tweenInfo, {Size = UDim2.new(0, 400, 0, 30)})
+        -- Minimize - size to fit title bar content
+        local titleWidth = titleText.TextBounds.X + 80 -- Add space for buttons and padding
+        local minimizedWidth = math.max(titleWidth, 120) -- Minimum width
+        local minimizeTween = TweenService:Create(mainFrame, tweenInfo, {Size = UDim2.new(0, minimizedWidth, 0, 30)})
         minimizeTween:Play()
         
         contentFrame.Visible = false
         watermarkFrame.Visible = false
-        minimizeButton.Text = "□"
+        minimizeButton.Text = "+"
         isMinimized = true
     else
         -- Restore
