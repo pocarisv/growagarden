@@ -5,8 +5,8 @@ gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
-mainFrame.Size = UDim2.new(0, 320, 0, 240)
-mainFrame.Position = UDim2.new(0.5, -160, 0.5, -120)
+mainFrame.Size = UDim2.new(0, 500, 0, 500)
+mainFrame.Position = UDim2.new(0.5, -250, 0.5, -250)
 mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 mainFrame.ClipsDescendants = true
 
@@ -16,7 +16,7 @@ mainCorner.Parent = mainFrame
 
 local mainBorder = Instance.new("UIStroke")
 mainBorder.Color = Color3.fromRGB(230, 230, 230)
-mainBorder.Thickness = 3
+mainBorder.Thickness = 3)
 mainBorder.Parent = mainFrame
 
 local titleBar = Instance.new("Frame")
@@ -32,7 +32,7 @@ titleBarCorner.Parent = titleBar
 
 local title = Instance.new("TextLabel")
 title.Name = "Title"
-title.Text = "CONTROL PANEL"
+title.Text = "ACTIVATION REQUIRED"
 title.Font = Enum.Font.FredokaOne
 title.TextSize = 16
 title.TextColor3 = Color3.fromRGB(230, 230, 230)
@@ -56,37 +56,103 @@ local closeCorner = Instance.new("UICorner")
 closeCorner.CornerRadius = UDim.new(0, 6)
 closeCorner.Parent = closeButton
 
-local minimizeButton = Instance.new("TextButton")
-minimizeButton.Name = "MinimizeButton"
-minimizeButton.Text = "-"
-minimizeButton.Font = Enum.Font.GothamSemibold
-minimizeButton.TextSize = 22
-minimizeButton.TextColor3 = Color3.fromRGB(0, 0, 0)
-minimizeButton.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
-minimizeButton.Size = UDim2.new(0, 28, 0, 28)
-minimizeButton.Position = UDim2.new(1, -64, 0, 2)
-minimizeButton.BorderSizePixel = 0
-
-local minCorner = Instance.new("UICorner")
-minCorner.CornerRadius = UDim.new(0, 6)
-minCorner.Parent = minimizeButton
-
-local contentFrame = Instance.new("Frame")
+local contentFrame = Instance.new("ScrollingFrame")
 contentFrame.Name = "ContentFrame"
 contentFrame.BackgroundTransparency = 1
-contentFrame.Size = UDim2.new(1, -16, 1, -60)
+contentFrame.Size = UDim2.new(1, -16, 1, -48)
 contentFrame.Position = UDim2.new(0, 8, 0, 40)
+contentFrame.ScrollBarThickness = 5
+contentFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
 
-local watermark = Instance.new("TextLabel")
-watermark.Name = "Watermark"
-watermark.Text = "made by pocari"
-watermark.Font = Enum.Font.GothamSemibold
-watermark.TextSize = 10
-watermark.TextColor3 = Color3.fromRGB(150, 150, 150)
-watermark.BackgroundTransparency = 1
-watermark.Size = UDim2.new(1, 0, 0, 16)
-watermark.Position = UDim2.new(0, 0, 1, -16)
-watermark.TextYAlignment = Enum.TextYAlignment.Top
+local layout = Instance.new("UIListLayout")
+layout.Parent = contentFrame
+layout.Padding = UDim.new(0, 15)
+layout.SortOrder = Enum.SortOrder.LayoutOrder
+
+local padding = Instance.new("UIPadding")
+padding.Parent = contentFrame
+padding.PaddingLeft = UDim.new(0, 5)
+padding.PaddingRight = UDim.new(0, 5)
+padding.PaddingTop = UDim.new(0, 5)
+
+local warningTitle = Instance.new("TextLabel")
+warningTitle.Name = "WarningTitle"
+warningTitle.Text = "Whoops! Stop Right There.."
+warningTitle.Font = Enum.Font.FredokaOne
+warningTitle.TextSize = 24
+warningTitle.TextColor3 = Color3.fromRGB(255, 60, 60)
+warningTitle.BackgroundTransparency = 1
+warningTitle.Size = UDim2.new(1, 0, 0, 30)
+warningTitle.TextXAlignment = Enum.TextXAlignment.Left
+warningTitle.LayoutOrder = 1
+
+local description = Instance.new("TextLabel")
+description.Name = "Description"
+description.Text = "Before you can have the access for the exploits. I wanted you to understand that the script you are executing are very sensitive towards servers, now keep in mind that it does the job done but it also assures your account safety. Therefore script will conduct several server restarts during the execution of the scripts/exploits and server restarts will only lasts for approximately 1min to 3mins, making sure you are in the safe server. Now, why does the script server restarts, well its because game light-ban their players by disabling the gifting feature for the account (ex. Trade Failed, Data Loss). During the server restart please refrain from doing anything to keep your account totally safe. If you agree please proceed to tick the check box below this message and press Activate button. Enjoy and Goodluck ;)"
+description.Font = Enum.Font.Gotham
+description.TextSize = 14
+description.TextColor3 = Color3.fromRGB(220, 220, 220)
+description.BackgroundTransparency = 1
+description.Size = UDim2.new(1, 0, 0, 0)
+description.TextWrapped = true
+description.TextXAlignment = Enum.TextXAlignment.Left
+description.AutomaticSize = Enum.AutomaticSize.Y
+description.LayoutOrder = 2
+
+local checkFrame = Instance.new("Frame")
+checkFrame.Name = "CheckFrame"
+checkFrame.BackgroundTransparency = 1
+checkFrame.Size = UDim2.new(1, 0, 0, 25)
+checkFrame.LayoutOrder = 3
+
+local checkbox = Instance.new("TextButton")
+checkbox.Name = "CheckBox"
+checkbox.Text = ""
+checkbox.Size = UDim2.new(0, 25, 0, 25)
+checkbox.Position = UDim2.new(0, 0, 0, 0)
+checkbox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+checkbox.AutoButtonColor = false
+
+local checkmark = Instance.new("TextLabel")
+checkmark.Name = "Checkmark"
+checkmark.Text = "✓"
+checkmark.Font = Enum.Font.SourceSansBold
+checkmark.TextSize = 25
+checkmark.TextColor3 = Color3.fromRGB(0, 200, 0)
+checkmark.BackgroundTransparency = 1
+checkmark.Size = UDim2.new(1, 0, 1, 0)
+checkmark.Visible = false
+
+local checkText = Instance.new("TextLabel")
+checkText.Name = "CheckText"
+checkText.Text = "I understood completely, I wish to continue."
+checkText.Font = Enum.Font.Gotham
+checkText.TextSize = 14
+checkText.TextColor3 = Color3.fromRGB(200, 200, 200)
+checkText.BackgroundTransparency = 1
+checkText.Size = UDim2.new(1, -30, 1, 0)
+checkText.Position = UDim2.new(0, 30, 0, 0)
+checkText.TextXAlignment = Enum.TextXAlignment.Left
+
+local activateButton = Instance.new("TextButton")
+activateButton.Name = "ActivateButton"
+activateButton.Text = "ACTIVATE"
+activateButton.Font = Enum.Font.FredokaOne
+activateButton.TextSize = 18
+activateButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+activateButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+activateButton.Size = UDim2.new(0, 150, 0, 40)
+activateButton.AutoButtonColor = false
+activateButton.LayoutOrder = 4
+
+local buttonCorner = Instance.new("UICorner")
+buttonCorner.CornerRadius = UDim.new(0, 6)
+buttonCorner.Parent = activateButton
+
+local buttonStroke = Instance.new("UIStroke")
+buttonStroke.Color = Color3.fromRGB(100, 100, 100)
+buttonStroke.Thickness = 2
+buttonStroke.Parent = activateButton
 
 local userInput = game:GetService("UserInputService")
 local tweenService = game:GetService("TweenService")
@@ -121,32 +187,8 @@ userInput.InputChanged:Connect(function(input)
     end
 end)
 
-minimizeButton.MouseButton1Click:Connect(function()
-    if minimizeButton.Text == "-" then
-        contentFrame.Visible = false
-        watermark.Visible = false
-        mainFrame.Size = UDim2.new(mainFrame.Size.X.Scale, mainFrame.Size.X.Offset, 0, 32)
-        minimizeButton.Text = "+"
-        titleBarCorner.CornerRadius = UDim.new(0, 8)
-    else
-        contentFrame.Visible = true
-        watermark.Visible = true
-        mainFrame.Size = UDim2.new(0, 320, 0, 240)
-        minimizeButton.Text = "-"
-        titleBarCorner.CornerRadius = UDim.new(0, 8)
-    end
-end)
-
 closeButton.MouseButton1Click:Connect(function()
     gui:Destroy()
-end)
-
-minimizeButton.MouseEnter:Connect(function()
-    minimizeButton.BackgroundColor3 = Color3.fromRGB(230, 230, 230)
-end)
-
-minimizeButton.MouseLeave:Connect(function()
-    minimizeButton.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
 end)
 
 closeButton.MouseEnter:Connect(function()
@@ -164,9 +206,26 @@ local pulseTween = tweenService:Create(
 )
 pulseTween:Play()
 
-watermark.Parent = mainFrame
+checkbox.MouseButton1Click:Connect(function()
+    checkmark.Visible = not checkmark.Visible
+end)
+
+activateButton.MouseEnter:Connect(function()
+    activateButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+end)
+
+activateButton.MouseLeave:Connect(function()
+    activateButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+end)
+
+checkmark.Parent = checkbox
+checkbox.Parent = checkFrame
+checkText.Parent = checkFrame
+checkFrame.Parent = contentFrame
+activateButton.Parent = contentFrame
+description.Parent = contentFrame
+warningTitle.Parent = contentFrame
 contentFrame.Parent = mainFrame
-minimizeButton.Parent = titleBar
 closeButton.Parent = titleBar
 title.Parent = titleBar
 titleBar.Parent = mainFrame
