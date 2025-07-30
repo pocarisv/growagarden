@@ -3,10 +3,12 @@ gui.Name = "PocariGUI"
 gui.ResetOnSpawn = false
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
+-- Main frame optimized for landscape (width 80% of screen, height 70% of screen)
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
-mainFrame.Size = UDim2.new(0, 400, 0, 400)
-mainFrame.Position = UDim2.new(0.5, -200, 0.5, -200)
+mainFrame.Size = UDim2.new(0.8, 0, 0.7, 0)
+mainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 mainFrame.ClipsDescendants = true
 
@@ -19,9 +21,10 @@ mainBorder.Color = Color3.fromRGB(230, 230, 230)
 mainBorder.Thickness = 3
 mainBorder.Parent = mainFrame
 
+-- Title bar with increased height for better touch
 local titleBar = Instance.new("Frame")
 titleBar.Name = "TitleBar"
-titleBar.Size = UDim2.new(1, 0, 0, 32)
+titleBar.Size = UDim2.new(1, 0, 0, 45)
 titleBar.Position = UDim2.new(0, 0, 0, 0)
 titleBar.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 titleBar.ClipsDescendants = true
@@ -34,49 +37,53 @@ local title = Instance.new("TextLabel")
 title.Name = "Title"
 title.Text = "ACTIVATION REQUIRED"
 title.Font = Enum.Font.FredokaOne
-title.TextSize = 16
+title.TextSize = 18
 title.TextColor3 = Color3.fromRGB(230, 230, 230)
 title.BackgroundTransparency = 1
 title.Size = UDim2.new(0, 200, 1, 0)
 title.Position = UDim2.new(0, 12, 0, 0)
 title.TextXAlignment = Enum.TextXAlignment.Left
 
+-- Larger close button for mobile
 local closeButton = Instance.new("TextButton")
 closeButton.Name = "CloseButton"
 closeButton.Text = "×"
 closeButton.Font = Enum.Font.GothamSemibold
-closeButton.TextSize = 22
+closeButton.TextSize = 28
 closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 closeButton.BackgroundColor3 = Color3.fromRGB(220, 60, 60)
-closeButton.Size = UDim2.new(0, 28, 0, 28)
-closeButton.Position = UDim2.new(1, -32, 0, 2)
+closeButton.Size = UDim2.new(0, 40, 0, 40)
+closeButton.Position = UDim2.new(1, -45, 0.5, -20)
+closeButton.AnchorPoint = Vector2.new(0, 0.5)
 closeButton.BorderSizePixel = 0
 
 local closeCorner = Instance.new("UICorner")
 closeCorner.CornerRadius = UDim.new(0, 6)
 closeCorner.Parent = closeButton
 
+-- Content area with increased padding
 local contentFrame = Instance.new("ScrollingFrame")
 contentFrame.Name = "ContentFrame"
 contentFrame.BackgroundTransparency = 1
-contentFrame.Size = UDim2.new(1, -16, 1, -100)
-contentFrame.Position = UDim2.new(0, 8, 0, 40)
-contentFrame.ScrollBarThickness = 6
+contentFrame.Size = UDim2.new(1, -20, 1, -65)
+contentFrame.Position = UDim2.new(0, 10, 0, 50)
+contentFrame.ScrollBarThickness = 8
 contentFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
-contentFrame.ScrollingDirection = Enum.ScrollingDirection.Y
-contentFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+contentFrame.BottomImage = "rbxasset://textures/ui/Scroll/scroll-middle.png"
+contentFrame.TopImage = "rbxasset://textures/ui/Scroll/scroll-middle.png"
 
 local layout = Instance.new("UIListLayout")
 layout.Parent = contentFrame
-layout.Padding = UDim.new(0, 12)
+layout.Padding = UDim.new(0, 15)
 layout.SortOrder = Enum.SortOrder.LayoutOrder
 
 local padding = Instance.new("UIPadding")
 padding.Parent = contentFrame
-padding.PaddingLeft = UDim.new(0, 4)
-padding.PaddingRight = UDim.new(0, 4)
-padding.PaddingTop = UDim.new(0, 4)
+padding.PaddingLeft = UDim.new(0, 8)
+padding.PaddingRight = UDim.new(0, 8)
+padding.PaddingTop = UDim.new(0, 8)
 
+-- Adjusted text elements
 local warningTitle = Instance.new("TextLabel")
 warningTitle.Name = "WarningTitle"
 warningTitle.Text = "Whoops! Stop Right There.."
@@ -85,46 +92,42 @@ warningTitle.TextSize = 22
 warningTitle.TextColor3 = Color3.fromRGB(255, 60, 60)
 warningTitle.BackgroundTransparency = 1
 warningTitle.Size = UDim2.new(1, 0, 0, 30)
-warningTitle.TextXAlignment = Enum.TextXAlignment.Center
+warningTitle.TextXAlignment = Enum.TextXAlignment.Left
 warningTitle.LayoutOrder = 1
 
 local description = Instance.new("TextLabel")
 description.Name = "Description"
 description.Text = "Before you can have the access for the exploits. I wanted you to understand that the script you are executing are very sensitive towards servers, now keep in mind that it does the job done but it also assures your account safety. Therefore script will conduct several server restarts during the execution of the scripts/exploits and server restarts will only lasts for approximately 1min to 3mins, making sure you are in the safe server. Now, why does the script server restarts, well its because game light-ban their players by disabling the gifting feature for the account (ex. Trade Failed, Data Loss). During the server restart please refrain from doing anything to keep your account totally safe. If you agree please proceed to tick the check box below this message and press Activate button. Enjoy and Goodluck ;)"
 description.Font = Enum.Font.Gotham
-description.TextSize = 14
+description.TextSize = 16  -- Increased for readability
 description.TextColor3 = Color3.fromRGB(220, 220, 220)
 description.BackgroundTransparency = 1
-description.Size = UDim2.new(1, -8, 0, 0)
+description.Size = UDim2.new(1, 0, 0, 0)
 description.TextWrapped = true
 description.TextXAlignment = Enum.TextXAlignment.Left
-description.TextYAlignment = Enum.TextYAlignment.Top
 description.AutomaticSize = Enum.AutomaticSize.Y
 description.LayoutOrder = 2
 
+-- Larger checkbox for touch
 local checkFrame = Instance.new("Frame")
 checkFrame.Name = "CheckFrame"
 checkFrame.BackgroundTransparency = 1
-checkFrame.Size = UDim2.new(1, 0, 0, 25)
+checkFrame.Size = UDim2.new(1, 0, 0, 35)
 checkFrame.LayoutOrder = 3
 
 local checkbox = Instance.new("TextButton")
 checkbox.Name = "CheckBox"
 checkbox.Text = ""
-checkbox.Size = UDim2.new(0, 25, 0, 25)
+checkbox.Size = UDim2.new(0, 35, 0, 35)  -- Increased size
 checkbox.Position = UDim2.new(0, 0, 0, 0)
 checkbox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 checkbox.AutoButtonColor = false
-
-local checkboxCorner = Instance.new("UICorner")
-checkboxCorner.CornerRadius = UDim.new(0, 4)
-checkboxCorner.Parent = checkbox
 
 local checkmark = Instance.new("TextLabel")
 checkmark.Name = "Checkmark"
 checkmark.Text = "✓"
 checkmark.Font = Enum.Font.SourceSansBold
-checkmark.TextSize = 25
+checkmark.TextSize = 30  -- Larger checkmark
 checkmark.TextColor3 = Color3.fromRGB(0, 200, 0)
 checkmark.BackgroundTransparency = 1
 checkmark.Size = UDim2.new(1, 0, 1, 0)
@@ -134,35 +137,29 @@ local checkText = Instance.new("TextLabel")
 checkText.Name = "CheckText"
 checkText.Text = "I understood completely, I wish to continue."
 checkText.Font = Enum.Font.Gotham
-checkText.TextSize = 14
+checkText.TextSize = 16  -- Increased size
 checkText.TextColor3 = Color3.fromRGB(200, 200, 200)
 checkText.BackgroundTransparency = 1
-checkText.Size = UDim2.new(1, -30, 1, 0)
-checkText.Position = UDim2.new(0, 30, 0, 0)
+checkText.Size = UDim2.new(1, -40, 1, 0)  -- Adjusted spacing
+checkText.Position = UDim2.new(0, 40, 0, 0)
 checkText.TextXAlignment = Enum.TextXAlignment.Left
 
-local buttonContainer = Instance.new("Frame")
-buttonContainer.Name = "ButtonContainer"
-buttonContainer.BackgroundTransparency = 1
-buttonContainer.Size = UDim2.new(1, 0, 0, 50)
-buttonContainer.LayoutOrder = 4
-buttonContainer.Position = UDim2.new(0, 0, 1, -60)
-
+-- Larger activate button
 local activateButton = Instance.new("TextButton")
 activateButton.Name = "ActivateButton"
 activateButton.Text = "ACTIVATE"
 activateButton.Font = Enum.Font.FredokaOne
-activateButton.TextSize = 18
+activateButton.TextSize = 20  -- Larger text
 activateButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-activateButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-activateButton.Size = UDim2.new(0, 150, 0, 40)
+activateButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+activateButton.Size = UDim2.new(1, -40, 0, 50)  -- Wider and taller
 activateButton.AutoButtonColor = false
-activateButton.Position = UDim2.new(0.5, -75, 0, 5)
+activateButton.LayoutOrder = 4
+activateButton.Position = UDim2.new(0.5, 0, 0, 0)
 activateButton.AnchorPoint = Vector2.new(0.5, 0)
-activateButton.Enabled = false
 
 local buttonCorner = Instance.new("UICorner")
-buttonCorner.CornerRadius = UDim.new(0, 6)
+buttonCorner.CornerRadius = UDim.new(0, 8)  -- Slightly larger corner
 buttonCorner.Parent = activateButton
 
 local buttonStroke = Instance.new("UIStroke")
@@ -170,6 +167,7 @@ buttonStroke.Color = Color3.fromRGB(100, 100, 100)
 buttonStroke.Thickness = 2
 buttonStroke.Parent = activateButton
 
+-- Input handling
 local userInput = game:GetService("UserInputService")
 local tweenService = game:GetService("TweenService")
 local dragging
@@ -224,28 +222,22 @@ pulseTween:Play()
 
 checkbox.MouseButton1Click:Connect(function()
     checkmark.Visible = not checkmark.Visible
-    activateButton.Enabled = checkmark.Visible
-    activateButton.BackgroundColor3 = checkmark.Visible and Color3.fromRGB(60, 180, 60) or Color3.fromRGB(80, 80, 80)
 end)
 
 activateButton.MouseEnter:Connect(function()
-    if activateButton.Enabled then
-        activateButton.BackgroundColor3 = Color3.fromRGB(80, 200, 80)
-    end
+    activateButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
 end)
 
 activateButton.MouseLeave:Connect(function()
-    if activateButton.Enabled then
-        activateButton.BackgroundColor3 = Color3.fromRGB(60, 180, 60)
-    end
+    activateButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 end)
 
+-- Parenting
 checkmark.Parent = checkbox
 checkbox.Parent = checkFrame
 checkText.Parent = checkFrame
 checkFrame.Parent = contentFrame
-activateButton.Parent = buttonContainer
-buttonContainer.Parent = mainFrame
+activateButton.Parent = contentFrame
 description.Parent = contentFrame
 warningTitle.Parent = contentFrame
 contentFrame.Parent = mainFrame
