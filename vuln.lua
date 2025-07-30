@@ -5,8 +5,8 @@ gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
-mainFrame.Size = UDim2.new(0, 400, 0, 400)
-mainFrame.Position = UDim2.new(0.5, -200, 0.5, -200)
+mainFrame.Size = UDim2.new(0, 500, 0, 500)
+mainFrame.Position = UDim2.new(0.5, -250, 0.5, -250)
 mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 mainFrame.ClipsDescendants = true
 
@@ -16,7 +16,7 @@ mainCorner.Parent = mainFrame
 
 local mainBorder = Instance.new("UIStroke")
 mainBorder.Color = Color3.fromRGB(230, 230, 230)
-mainBorder.Thickness = 3
+mainBorder.Thickness = 3)
 mainBorder.Parent = mainFrame
 
 local titleBar = Instance.new("Frame")
@@ -59,37 +59,31 @@ closeCorner.Parent = closeButton
 local contentFrame = Instance.new("ScrollingFrame")
 contentFrame.Name = "ContentFrame"
 contentFrame.BackgroundTransparency = 1
-contentFrame.Size = UDim2.new(1, -16, 0.7, -10)
+contentFrame.Size = UDim2.new(1, -16, 1, -48)
 contentFrame.Position = UDim2.new(0, 8, 0, 40)
-contentFrame.ScrollBarThickness = 6
+contentFrame.ScrollBarThickness = 5
 contentFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
-contentFrame.ScrollingDirection = Enum.ScrollingDirection.Y
-contentFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
 
 local layout = Instance.new("UIListLayout")
 layout.Parent = contentFrame
-layout.Padding = UDim.new(0, 12)
+layout.Padding = UDim.new(0, 15)
 layout.SortOrder = Enum.SortOrder.LayoutOrder
 
 local padding = Instance.new("UIPadding")
 padding.Parent = contentFrame
-padding.PaddingLeft = UDim.new(0, 4)
-padding.PaddingRight = UDim.new(0, 4)
-padding.PaddingTop = UDim.new(0, 4)
-
-layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-    contentFrame.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 20)
-end)
+padding.PaddingLeft = UDim.new(0, 5)
+padding.PaddingRight = UDim.new(0, 5)
+padding.PaddingTop = UDim.new(0, 5)
 
 local warningTitle = Instance.new("TextLabel")
 warningTitle.Name = "WarningTitle"
 warningTitle.Text = "Whoops! Stop Right There.."
 warningTitle.Font = Enum.Font.FredokaOne
-warningTitle.TextSize = 22
+warningTitle.TextSize = 24
 warningTitle.TextColor3 = Color3.fromRGB(255, 60, 60)
 warningTitle.BackgroundTransparency = 1
 warningTitle.Size = UDim2.new(1, 0, 0, 30)
-warningTitle.TextXAlignment = Enum.TextXAlignment.Center
+warningTitle.TextXAlignment = Enum.TextXAlignment.Left
 warningTitle.LayoutOrder = 1
 
 local description = Instance.new("TextLabel")
@@ -99,10 +93,9 @@ description.Font = Enum.Font.Gotham
 description.TextSize = 14
 description.TextColor3 = Color3.fromRGB(220, 220, 220)
 description.BackgroundTransparency = 1
-description.Size = UDim2.new(1, -8, 0, 0)
+description.Size = UDim2.new(1, 0, 0, 0)
 description.TextWrapped = true
 description.TextXAlignment = Enum.TextXAlignment.Left
-description.TextYAlignment = Enum.TextYAlignment.Top
 description.AutomaticSize = Enum.AutomaticSize.Y
 description.LayoutOrder = 2
 
@@ -119,10 +112,6 @@ checkbox.Size = UDim2.new(0, 25, 0, 25)
 checkbox.Position = UDim2.new(0, 0, 0, 0)
 checkbox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 checkbox.AutoButtonColor = false
-
-local checkboxCorner = Instance.new("UICorner")
-checkboxCorner.CornerRadius = UDim.new(0, 4)
-checkboxCorner.Parent = checkbox
 
 local checkmark = Instance.new("TextLabel")
 checkmark.Name = "Checkmark"
@@ -145,24 +134,16 @@ checkText.Size = UDim2.new(1, -30, 1, 0)
 checkText.Position = UDim2.new(0, 30, 0, 0)
 checkText.TextXAlignment = Enum.TextXAlignment.Left
 
-local buttonContainer = Instance.new("Frame")
-buttonContainer.Name = "ButtonContainer"
-buttonContainer.BackgroundTransparency = 1
-buttonContainer.Size = UDim2.new(1, 0, 0, 50)
-buttonContainer.Position = UDim2.new(0, 0, 0.8, 10)
-
 local activateButton = Instance.new("TextButton")
 activateButton.Name = "ActivateButton"
 activateButton.Text = "ACTIVATE"
 activateButton.Font = Enum.Font.FredokaOne
 activateButton.TextSize = 18
 activateButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-activateButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+activateButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 activateButton.Size = UDim2.new(0, 150, 0, 40)
 activateButton.AutoButtonColor = false
-activateButton.Position = UDim2.new(0.5, -75, 0, 5)
-activateButton.AnchorPoint = Vector2.new(0.5, 0)
-activateButton.Enabled = false
+activateButton.LayoutOrder = 4
 
 local buttonCorner = Instance.new("UICorner")
 buttonCorner.CornerRadius = UDim.new(0, 6)
@@ -227,33 +208,26 @@ pulseTween:Play()
 
 checkbox.MouseButton1Click:Connect(function()
     checkmark.Visible = not checkmark.Visible
-    activateButton.Enabled = checkmark.Visible
-    activateButton.BackgroundColor3 = checkmark.Visible and Color3.fromRGB(60, 180, 60) or Color3.fromRGB(80, 80, 80)
 end)
 
 activateButton.MouseEnter:Connect(function()
-    if activateButton.Enabled then
-        activateButton.BackgroundColor3 = Color3.fromRGB(80, 200, 80)
-    end
+    activateButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
 end)
 
 activateButton.MouseLeave:Connect(function()
-    if activateButton.Enabled then
-        activateButton.BackgroundColor3 = Color3.fromRGB(60, 180, 60)
-    end
+    activateButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 end)
 
 checkmark.Parent = checkbox
 checkbox.Parent = checkFrame
 checkText.Parent = checkFrame
 checkFrame.Parent = contentFrame
+activateButton.Parent = contentFrame
 description.Parent = contentFrame
 warningTitle.Parent = contentFrame
 contentFrame.Parent = mainFrame
 closeButton.Parent = titleBar
 title.Parent = titleBar
 titleBar.Parent = mainFrame
-activateButton.Parent = buttonContainer
-buttonContainer.Parent = mainFrame
 mainFrame.Parent = gui
-gui.Parent = game:GetService("CoreGui")
+gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
