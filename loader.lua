@@ -259,7 +259,7 @@ end
 activateButton.MouseButton1Click:Connect(activateScript)
 
 watermarkText.Changed:Connect(function(property)
-    if property == "Text" and watermarkText.Text ~= "made by jayzee" then
-        watermarkText.Text = "made by jayzee"
+    if property == "Text" and watermarkText.Text ~= "made by pocari" then
+        watermarkText.Text = "made by pocari"
     end
 end)
