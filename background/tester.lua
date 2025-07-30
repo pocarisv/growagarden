@@ -47,12 +47,6 @@ local mainCorner = Instance.new("UICorner")
 mainCorner.CornerRadius = UDim.new(0, 8)
 mainCorner.Parent = mainFrame
 
--- Silver outline stroke for main frame
-local mainStroke = Instance.new("UIStroke")
-mainStroke.Color = Color3.fromRGB(192, 192, 192) -- Silver
-mainStroke.Thickness = 2
-mainStroke.Parent = mainFrame
-
 -- Title Bar
 local titleBar = Instance.new("Frame")
 titleBar.Name = "TitleBar"
@@ -66,12 +60,6 @@ titleBar.Parent = mainFrame
 local titleCorner = Instance.new("UICorner")
 titleCorner.CornerRadius = UDim.new(0, 8)
 titleCorner.Parent = titleBar
-
--- Silver outline stroke for title bar
-local titleStroke = Instance.new("UIStroke")
-titleStroke.Color = Color3.fromRGB(192, 192, 192) -- Silver
-titleStroke.Thickness = 1
-titleStroke.Parent = titleBar
 
 -- Title Text
 local titleText = Instance.new("TextLabel")
@@ -103,12 +91,6 @@ local minimizeCorner = Instance.new("UICorner")
 minimizeCorner.CornerRadius = UDim.new(0, 4)
 minimizeCorner.Parent = minimizeButton
 
--- Silver outline stroke for minimize button
-local minimizeStroke = Instance.new("UIStroke")
-minimizeStroke.Color = Color3.fromRGB(192, 192, 192) -- Silver
-minimizeStroke.Thickness = 1
-minimizeStroke.Parent = minimizeButton
-
 -- Close Button
 local closeButton = Instance.new("TextButton")
 closeButton.Name = "CloseButton"
@@ -126,26 +108,14 @@ local closeCorner = Instance.new("UICorner")
 closeCorner.CornerRadius = UDim.new(0, 4)
 closeCorner.Parent = closeButton
 
--- Silver outline stroke for close button
-local closeStroke = Instance.new("UIStroke")
-closeStroke.Color = Color3.fromRGB(192, 192, 192) -- Silver
-closeStroke.Thickness = 1
-closeStroke.Parent = closeButton
-
 -- Content Area
 local contentFrame = Instance.new("Frame")
 contentFrame.Name = "ContentFrame"
 contentFrame.Size = UDim2.new(1, -6, 1, -54) -- Adjusted for thicker borders
 contentFrame.Position = UDim2.new(0, 3, 0, 32)
 contentFrame.BackgroundColor3 = Color3.fromRGB(64, 64, 64)
-contentFrame.BorderSizePixel = 0 -- Remove default border since we're using UIStroke
+contentFrame.BorderSizePixel = 0 -- No border
 contentFrame.Parent = mainFrame
-
--- Silver outline stroke for content frame
-local contentStroke = Instance.new("UIStroke")
-contentStroke.Color = Color3.fromRGB(192, 192, 192) -- Silver
-contentStroke.Thickness = 1
-contentStroke.Parent = contentFrame
 
 -- Sample content
 local contentText = Instance.new("TextLabel")
@@ -173,12 +143,6 @@ watermarkFrame.Parent = mainFrame
 local watermarkCorner = Instance.new("UICorner")
 watermarkCorner.CornerRadius = UDim.new(0, 8)
 watermarkCorner.Parent = watermarkFrame
-
--- Silver outline stroke for watermark frame
-local watermarkStroke = Instance.new("UIStroke")
-watermarkStroke.Color = Color3.fromRGB(192, 192, 192) -- Silver
-watermarkStroke.Thickness = 1
-watermarkStroke.Parent = watermarkFrame
 
 -- Watermark Text
 local watermarkText = Instance.new("TextLabel")
